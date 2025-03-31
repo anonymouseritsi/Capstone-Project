@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Annotation Tool</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <style>
+        canvas { border: 1px solid black; }
+        #controls { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Image Annotation Tool</h1>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="controls">
+        <button onclick="saveAnnotations()">Save Annotations</button>
+    </div>
+
+    <div>
+        <button id="deleteAnnotation">Delete</button>
+        <button id="editAnnotation">Edit Label</button>
+    </div>
+
+    <script>
+        let canvas = new fabric.Canvas('canvas');
+
+// Load latest uploaded image from API
+            fetch('/api/images/')
+                .then(response => response.json())
+                .then(images => {
+                    if (images.length > 0) {
+                        let latestImage = images[images.length - 1];  // Get latest uploaded image
+                        let imageUrl = latestImage.image.startsWith("/")
+                            ? window.location.origin + latestImage.image
+                            : latestImage.image;
+
+                        fabric.Image.fromURL(imageUrl, function(img) {
+                            let maxWidth = 800; // Set max width
+                            let maxHeight = 600; // Set max height
+                            let scale = Math.min(maxWidth / img.width, maxHeight / img.height); 
+                            img.scale(scale); 
+                            img.set({
+                                selectable: false,   
+                                evented: false,      
+                                hasControls: false,  
+                                lockMovementX: true, 
+                                lockMovementY: true, 
+                                lockScalingX: true,  
+                                lockScalingY: true,  
+                                lockRotation: true   
+                            });
+
+                            canvas.setWidth(img.width);
+                            canvas.setHeight(img.height);
+                            canvas.add(img);
+                            canvas.sendToBack(img);  // Ensure image stays behind annotations
+                        });
+                    } else {
+                        alert("No images found. Please upload an image first.");
+                    }
+                })
+                .catch(error => console.error("Error fetching images:", error));
+
+            // Enable free drawing mode
+            canvas.isDrawingMode = true;
+            canvas.freeDrawingBrush.width = 3;
+            canvas.freeDrawingBrush.color = "red";
+
+
+            canvas.on('object:selected', function(event) {
+                let activeObject = event.target;
+                if (activeObject && activeObject.type !== 'image') {  // Ensure only annotations are editable
+                    showAnnotationControls(activeObject);
+                }});
+
+            document.getElementById('deleteAnnotation').addEventListener('click', function() {
+                let activeObject = canvas.getActiveObject();
+                if (activeObject && activeObject.type !== 'image') {  // Prevent deleting the background image
+                    let objectsToRemove = [activeObject];
+
+                    // If it's a rectangle, find and remove its corresponding label
+                    if (activeObject.type === 'rect') {
+                        let associatedText = canvas.getObjects().find(obj =>
+                            obj.type === 'text' &&
+                            Math.abs(obj.left - activeObject.left) < 5 &&
+                            Math.abs(obj.top - (activeObject.top - 20)) < 5
+                        );
+
+                        if (associatedText) {
+                            objectsToRemove.push(associatedText);
+                        }
+                    }
+
+                    objectsToRemove.forEach(obj => canvas.remove(obj));
+                    canvas.renderAll();
+                }
+            });
+
+                        
+
+            // Edit annotation button
+            document.getElementById('editAnnotation').addEventListener('click', function() {
+                let activeObject = canvas.getActiveObject();
+                if (activeObject && activeObject.text) {
+                    let newText = prompt("Edit annotation text:", activeObject.text);
+                    if (newText !== null) {
+                        activeObject.set('text', newText);
+                        canvas.renderAll();
+                    }
+                }
+            });
+        // Draw annotation rectangle with size label
+        let isDrawing = false;
+        let rect, text;
+        
+        canvas.on('mouse:down', function(event) {
+            isDrawing = true;
+            let pointer = canvas.getPointer(event.e);
+            rect = new fabric.Rect({
+                left: pointer.x,
+                top: pointer.y,
+                width: 0,
+                height: 0,
+                fill: 'rgba(255, 0, 0, 0.5)',
+                stroke: 'red',
+                strokeWidth: 2,
+                selectable: false
+            });
+            text = new fabric.Text("", {
+                left: pointer.x,
+                top: pointer.y - 20,
+                fontSize: 14,
+                fill: 'black',
+                backgroundColor: 'white'
+            });
+            canvas.add(rect);
+            canvas.add(text);
+        });
+
+        canvas.on('object:selected', function(event) {
+            let activeObject = event.target;
+            if (activeObject && activeObject.type !== 'image') {  // Ensure only annotations are editable
+                showAnnotationControls(activeObject);
+            }
+        });
+
+        canvas.on('mouse:move', function(event) {
+            if (!isDrawing) return;
+            let pointer = canvas.getPointer(event.e);
+
+            // Ensure width and height are rounded to whole numbers
+            let width = Math.round(pointer.x - rect.left);
+            let height = Math.round(pointer.y - rect.top);
+
+            rect.set({
+                width: width,
+                height: height
+            });
+
+            text.set({
+                text: `W: ${Math.abs(width)}, H: ${Math.abs(height)}`, // Whole numbers
+                left: rect.left,
+                top: rect.top - 20
+            });
+
+            canvas.renderAll();
+        });
+
+
+        canvas.on('mouse:up', function() {
+            isDrawing = false;
+            rect.set({ selectable: true }); // Allow selection after drawing
+        });
+
+        // Save annotation data
+        function saveAnnotations() {
+            let annotations = [];
+            let imageId = 1; // Replace with dynamic image ID if necessary
+
+            canvas.getObjects().forEach(obj => {
+                if (obj.type === 'rect') {
+                    annotations.push({
+                        image: imageId,
+                        x: obj.left,
+                        y: obj.top,
+                        width: Math.abs(obj.width),
+                        height: Math.abs(obj.height),
+                        label: `${Math.abs(obj.width)} x ${Math.abs(obj.height)}`
+                    });
+                }
+            });
+
+            // Send data to Django API
+            fetch('/api/annotations/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(annotations[0])
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Saved:", data);
+                alert("Annotation saved!");
+            });
+        }
+    </script>
+</body>
+</html>
