@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Doctor Dashboard{% endblock %}
+
+{% block content %}
+    <h1 class="text-2xl font-bold mb-6">What do you want to do today, Doctor?</h1>
+
+    <div class="grid grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow text-center">
+            <p class="text-xl mb-4">Proceed to Annotation</p>
+            <a href="{% url 'annotate' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                Go to Annotator
+            </a>
+        </div>
+    </div>
+
+    <div class="flex-1 p-10">
+        
+        <div class="grid grid-cols-3 gap-4">
+            <a href="{% url 'add_patient' %}" class="bg-white p-6 shadow rounded-lg block text-center">
+                ➕ Add Patient
+            </a>
+            <div class="bg-white p-6 shadow rounded-lg">📈 View Analytics</div>
+            <a href="{% url 'recent_patients' %}" class="block p-4 rounded bg-white shadow hover:bg-gray-100">
+                📋 Recent Patients
+            </a>
+        </div>
+    </div>
+{% endblock %}
