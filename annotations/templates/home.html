@@ -1,29 +1,98 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}Home - Doctor Dashboard{% endblock %}
+{% block title %}
+Home
+{% endblock %}
 
 {% block content %}
-    <h1 class="text-2xl font-bold mb-6">What do you want to do today, Doctor?</h1>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<!-- dark overlay for the side panel -->
+<div class="dark-overlay" id='dark-overlay'></div>
+<!-- side panel -->
+<div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
+    <div class="logo">
 
-    <div class="grid grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-xl shadow text-center">
-            <p class="text-xl mb-4">Proceed to Annotation</p>
-            <a href="{% url 'annotate' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                Go to Annotator
-            </a>
+    </div>
+    <!-- side navigation buttons -->
+    <nav class="side-panel-icons">
+        <div class="home-icon" onclick="location.href='/add-patient';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText1">Home</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/patients';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/patient.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText2">Patients</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/billing';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/billing.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText3">Billing</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/analytics';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/analytics.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText4">Analytics</p>
+        </div>
+    </nav>
+    <!-- logout button -->
+    <div class="logout">
+
+    </div>
+</div>
+<!-- body container -->
+ <div class="main-container">
+    <div class="welcome-header">
+        <p id="headerText">What do you want to do today? {user}</p>
+    </div>
+    <div class="button-container">
+        <div class="home-buttons">
+            <span class="add-view-container">
+                <div class="add-patient" onclick="location.href='add-patients/'" style="cursor: pointer;">
+                    <span class="add-icon">
+                        
+                    </span>
+                    <span class="add-text">
+
+                    </span>
+                </div>
+                <div class="view-analytics">
+
+                </div>
+            </span>
+            <span class="view-patient-container">
+                <div class="view-patients">
+
+                </div>
+            </span>
+        </div>
+        <div class="recent-patients">
+
         </div>
     </div>
+ </div>
+    <script>
+        function darkenOverlay() {
+            document.getElementById('dark-overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.40)';
+            document.getElementById('iconText1').style.opacity = '1';
+            document.getElementById('iconText2').style.opacity = '1';
+            document.getElementById('iconText3').style.opacity = '1';
+            document.getElementById('iconText4').style.opacity = '1';
 
-    <div class="flex-1 p-10">
-        
-        <div class="grid grid-cols-3 gap-4">
-            <a href="{% url 'add_patient' %}" class="bg-white p-6 shadow rounded-lg block text-center">
-                ➕ Add Patient
-            </a>
-            <div class="bg-white p-6 shadow rounded-lg">📈 View Analytics</div>
-            <a href="{% url 'recent_patients' %}" class="block p-4 rounded bg-white shadow hover:bg-gray-100">
-                📋 Recent Patients
-            </a>
-        </div>
-    </div>
+
+        }
+        function lightenOverlay() {
+            document.getElementById('dark-overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+            document.getElementById('iconText1').style.opacity = '0';
+            document.getElementById('iconText2').style.opacity = '0';
+            document.getElementById('iconText3').style.opacity = '0';
+            document.getElementById('iconText4').style.opacity = '0';
+        }
+    </script>
 {% endblock %}

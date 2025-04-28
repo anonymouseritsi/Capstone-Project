@@ -16,10 +16,13 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 
 def home(request):
     return render(request,'home.html')
-def masters(request):
-    return render(request,'master.html')
+
+def base(request):
+    return render(request,'base.html')
+
 def annotate_image(request):
     return render(request, 'annotate.html')
+
 def patients_view(request):
     return render(request, 'patients.html')
 

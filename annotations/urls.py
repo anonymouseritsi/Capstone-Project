@@ -1,7 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import ImageViewSet, AnnotationViewSet
-from .views import annotate_image, home, patients_view, billing_view, reports_view, logout_view,masters,add_patient,add_procedure,recent_patients,upload_image_for_patient
+from .views import *
+from . import views
 
 router = DefaultRouter()
 router.register(r'images', ImageViewSet)
@@ -9,8 +10,9 @@ router.register(r'annotations', AnnotationViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('', home, name='home'),
-    path('', masters, name='masters'),
+    # path('', base, name='base')
+    path('home/', views.home, name='home'),
+    path('', base, name='base'),
     path('annotate/', annotate_image, name='annotate'),
     path('patients/', patients_view, name='patients'),
     path('billing/', billing_view, name='billing'),
