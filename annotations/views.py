@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 from .models import Image, Annotation
 from .serializers import ImageSerializer, AnnotationSerializer
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PatientForm, ProcedureForm
-from .models import Patient
+from .models import *
 from .forms import ImageUploadForm
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -24,7 +24,18 @@ def annotate_image(request):
     return render(request, 'annotate.html')
 
 def patients_view(request):
-    return render(request, 'patients.html')
+    all_patients = Patient.objects.all()
+    context = {
+        'patient': all_patients,
+    }
+    return render(request, 'patients.html', context)
+
+def patient_details(request, name):
+    patient = get_object_or_404(Patient, name=name)
+    context = {
+        'name': patient,
+    }
+    return render(request, 'patient/patient_details.html', context)
 
 def billing_view(request):
     return render(request, 'billing.html')
@@ -42,7 +53,7 @@ def add_patient(request):
         form = PatientForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('add_procedure')  # or redirect to home or patient list
+            return redirect('add_procedure')
     else:
         form = PatientForm()
     return render(request, 'add_patient.html', {'form': form})

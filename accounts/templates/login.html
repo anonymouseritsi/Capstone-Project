@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<!-- parent container -->
+<div class="login-parent">
+    <!-- left div which is the login container -->
+    <div class="login-container">
+        <span class="sign-in-span">
+            <p class="sign-in">Sign In</p>
+        </span>
+        <span class="flex-form">
+            <form action="{% url 'login' %}" method="post" id="login-form">
+                {% csrf_token %}
+                <span>
+                    <label for="username-input" id="username-label">USERNAME</label>
+                </span>
+                <input type="text" id="username-input" name="username" required>
+                <br>
+                <span>
+                    <label for="password-input" id="password-label">PASSWORD</label>
+                </span>
+                <input type="password" id="password-input" name="password" required>
+                <br>
+                <br>
+                <input type="submit" value="SIGN IN" id="sign-in-button">
+            </form>
+        </span>
+    </div>
+    <!-- right div which is the welcome container -->
+    <div class="welcome-container">
+        <p class="welcome-text">Welcome to <strong>*name*</strong></p>
+        <p class="sub-text">Don't have an account?</p>
+        <button id="sign-in-button" onclick="toRegister()">SIGN UP</button>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    function toRegister(){
+        document.location.href = "{% url 'register' %}"
+    }
+</script>
+{% endblock %}

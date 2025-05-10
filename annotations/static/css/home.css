@@ -1,6 +1,6 @@
 div.side-panel {
     height: 100%;
-    width: 5%;
+    width: 12%;
     background-color: #E9DCC9;
     position: fixed;
     top: 0;
@@ -25,7 +25,7 @@ div.side-panel {
 
 div.side-panel:hover {
     background-color: rgb(234, 227, 214);
-    width: 12%;
+    /* width: 12%; */
 }
 
 div#dark-overlay {
