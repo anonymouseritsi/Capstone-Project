@@ -13,8 +13,9 @@
             <th>Contact Number</th>
         </tr>
         {% for x in patient %}
-            <tr onclick="location.href='{% url %}'">
-                <td>{{ x.name }}</td>
+        <a href=""></a>
+            <tr>
+                <td><a href="{% url 'patient_manager:patient_details' x.name %}">{{ x.name }}</a></td>
                 <td>{{ x.age }}</td>
                 <td>{{ x.sex }}</td>
                 <td>{{ x.contact_number }}</td>
