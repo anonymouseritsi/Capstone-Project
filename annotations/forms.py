@@ -10,8 +10,8 @@ class PatientForm(forms.ModelForm):
 class ProcedureForm(forms.ModelForm):
     class Meta:
         model = Procedure
-        fields = ['patient', 'procedure_type', 'notes']
-
+        fields = ['patient', 'procedure_type', 'notes', 'date']
+    date = forms.DateField(widget=forms.SelectDateWidget())
 
 class ImageUploadForm(forms.ModelForm):
     class Meta:

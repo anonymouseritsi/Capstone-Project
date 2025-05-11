@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.timezone import now  
+from django.utils import timezone
 from django.db import models
 from django.conf import settings
 
@@ -27,9 +28,9 @@ class Procedure(models.Model):
     ]
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='procedures', null=True)
-    procedure_type = models.CharField(max_length=20, choices=PROCEDURE_CHOICES)
+    procedure_type = models.CharField(max_length=20, choices=PROCEDURE_CHOICES) 
     notes = models.TextField(blank=True, null=True)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField(default=models.DateField.today)
 
     def __str__(self):
         return f"{self.procedure_type} - {self.patient.name}"

@@ -32,10 +32,12 @@ def patients_view(request):
 
 def patient_details(request, name):
     patient = get_object_or_404(Patient, name=name)
+    procedure = patient.procedures.first()
     context = {
-        'name': patient,
+        'patient': patient,
+        'procedure': procedure,
     }
-    return render(request, 'patient/patient_details.html', context)
+    return render(request, 'patient_details.html', context)
 
 def billing_view(request):
     return render(request, 'billing.html')

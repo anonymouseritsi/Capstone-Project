@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Patients Details - Doctor Dashboard{% endblock %}
+
+{% block content %}
+<h1>{{ patient.name }}'s Details</h1>
+<p>Age: {{ patient.age }}</p>
+
+<h2>Procedures</h2>
+<ul>
+  <li>
+      Procedure: {{ procedure.procedure_type|default:"No recorded procedure" }}
+    </li>
+    <li>
+      Date: {% if procedure.date %}{{ procedure.date }}{% else %}No recorded date{% endif %}
+    </li>
+    <li>
+      Notes: {{ procedure.notes|default:"No recorded notes" }}
+    </li>
+    <hr>
+</ul>
+
+{% endblock %}
