@@ -10,10 +10,10 @@ class Patient(models.Model):
         ('F', 'Female'),
     ]
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     age = models.PositiveIntegerField()
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
-    contact_number = models.CharField(max_length=15)
+    contact_number = models.CharField(max_length=11)
 
     def __str__(self):
         return self.name
@@ -30,7 +30,7 @@ class Procedure(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='procedures', null=True)
     procedure_type = models.CharField(max_length=20, choices=PROCEDURE_CHOICES) 
     notes = models.TextField(blank=True, null=True)
-    date = models.DateField(default=models.DateField.today)
+    date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.procedure_type} - {self.patient.name}"

@@ -13,9 +13,8 @@
             <th>Contact Number</th>
         </tr>
         {% for x in patient %}
-        <a href=""></a>
-            <tr>
-                <td><a href="{% url 'patient_manager:patient_details' x.name %}">{{ x.name }}</a></td>
+            <tr style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' x.name %}';">
+                <td>{{ x.name }}</td>
                 <td>{{ x.age }}</td>
                 <td>{{ x.sex }}</td>
                 <td>{{ x.contact_number }}</td>

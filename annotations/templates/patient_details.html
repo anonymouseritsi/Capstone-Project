@@ -20,4 +20,8 @@
     <hr>
 </ul>
 
+<a href="{% url 'patient_manager:edit_patient' patient.name %}">Edit Patient Information</a>
+<br>
+<a href="{% url 'patient_manager:delete_patient' patient.name %}">Delete Patient Record</a>
+
 {% endblock %}

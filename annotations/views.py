@@ -39,6 +39,24 @@ def patient_details(request, name):
     }
     return render(request, 'patient_details.html', context)
 
+def edit_patient(request, name):
+    patient = get_object_or_404(Patient, name=name)
+    if request.method == 'POST':
+        form = PatientForm(request.POST, instance=patient)
+        if form.is_valid():
+            form.save()
+            return redirect('patient_manager:patient_details', name=patient.name)
+    else:
+        form = PatientForm(instance=patient)
+    return render(request, 'edit_patient.html', {'form': form})
+
+def delete_patient(request, name):
+    patient = get_object_or_404(Patient, name=name)
+    if request.method == 'POST':
+        patient.delete()
+        return redirect('patient_manager:patients')
+    return render(request, 'delete_patient.html', {'patient': patient})
+
 def billing_view(request):
     return render(request, 'billing.html')
 
@@ -55,7 +73,7 @@ def add_patient(request):
         form = PatientForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('add_procedure')
+            return redirect('patient_manager:add_procedure')
     else:
         form = PatientForm()
     return render(request, 'add_patient.html', {'form': form})
@@ -65,7 +83,7 @@ def add_procedure(request):
         form = ProcedureForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('patient_manager:home')
     else:
         form = ProcedureForm()
     return render(request, 'add_procedure.html', {'form': form})
@@ -83,7 +101,7 @@ def upload_image_for_patient(request, patient_id):
             image = form.save(commit=False)
             image.patient = patient
             image.save()
-            return redirect('annotate')  # or show confirmation
+            return redirect('patient_manager:annotate')  # or show confirmation
     else:
         form = ImageUploadForm()
     return render(request, 'upload_image.html', {'form': form, 'patient': patient})
