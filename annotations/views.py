@@ -93,8 +93,8 @@ def recent_patients(request):
     patients = Patient.objects.all().order_by('-id')[:10]  # Most recent 10
     return render(request, 'recent_patients.html', {'patients': patients})
 
-def upload_image_for_patient(request, patient_id):
-    patient = Patient.objects.get(id=patient_id)
+def upload_image_for_patient(request, name):
+    patient = Patient.objects.get(name=name)
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():

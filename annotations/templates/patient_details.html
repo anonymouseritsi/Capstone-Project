@@ -19,7 +19,20 @@
     </li>
     <hr>
 </ul>
+  <p>Images:</p>
+  <ul>
+    {% for image in patient.images.all %}
+      <li>
+        <img src="{{ image.image.url }}" alt="Image {{ forloop.counter }}">
+      </li>
+    {% empty %}
+      <li>No images uploaded.</li>
+    {% endfor %}
+  </ul>
 
+<p><a href="{% url 'patient_manager:upload_image' patient.name %}">Upload Photos</a></p>
+
+<br>
 <a href="{% url 'patient_manager:edit_patient' patient.name %}">Edit Patient Information</a>
 <br>
 <a href="{% url 'patient_manager:delete_patient' patient.name %}">Delete Patient Record</a>

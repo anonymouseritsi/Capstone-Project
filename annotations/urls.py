@@ -26,5 +26,5 @@ urlpatterns = [
     path('add-patient/', add_patient, name='add_patient'),
     path('add-procedure/', add_procedure, name='add_procedure'),
     path('recent-patients/', recent_patients, name='recent_patients'),
-    path('patient/<int:patient_id>/upload-image/', upload_image_for_patient, name='upload_image'),
+    path('patient/<str:name>/upload-image/', upload_image_for_patient, name='upload_image'),
 ]
