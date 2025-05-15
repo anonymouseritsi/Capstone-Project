@@ -12,7 +12,6 @@ class ProcedureForm(forms.ModelForm):
         model = Procedure
         fields = ['patient', 'procedure_type', 'notes']
 
-
 class ImageUploadForm(forms.ModelForm):
     class Meta:
         model = Image

@@ -8,7 +8,7 @@ Home
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 <!-- dark overlay for the side panel -->
-<div class="dark-overlay" id='dark-overlay'></div>
+<!-- <div class="dark-overlay" id='dark-overlay'></div> -->
 <!-- side panel -->
 <div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
     <div class="logo">
@@ -16,7 +16,7 @@ Home
     </div>
     <!-- side navigation buttons -->
     <nav class="side-panel-icons">
-        <div class="home-icon" onclick="location.href='/add-patient';" style="cursor: pointer;">
+        <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
             <span class="icon-span">
                 <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
             </span>
@@ -54,7 +54,7 @@ Home
     <div class="button-container">
         <div class="home-buttons">
             <span class="add-view-container">
-                <div class="add-patient" onclick="location.href='add-patients/'" style="cursor: pointer;">
+                <div class="add-patient" onclick="location.href='/add-patient'" style="cursor: pointer;">
                     <span class="add-icon">
                         
                     </span>

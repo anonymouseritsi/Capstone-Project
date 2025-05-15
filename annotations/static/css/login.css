@@ -1,0 +1,139 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CSS FOR THE LOGIN PARENT */
+div.login-parent {
+    height: 70%;
+    width: 70%;
+    /* background-color: gray; */
+    box-shadow: 2px 5px 10px rgb(0, 0, 0, 62%);
+    border-radius: 10px;
+    > div.login-container {
+        float: left;
+        height: 100%;
+        width: 50%;
+        background-color: #FAF9F6;
+    }
+    > div.welcome-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        float: right;
+        height: 100%;
+        width: 50%;
+        background: linear-gradient(270deg, rgba(233,220,201,1) 0%, rgba(226,223,210,1) 33%, rgba(240,234,214,1) 66%, rgba(249,246,238,1) 100%);
+    }
+}
+
+span.sign-in-span {
+    width: auto;
+    > p.sign-in {
+        font-size: 40px;
+        font-family: 'Lexend Deca', sans-serif;
+        margin: 0;
+        margin-left: 10%;
+        margin-top: 15%;
+    }
+}
+
+span.flex-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 70%;
+    width: 80%;
+    margin-left: 10%;
+    /* background-color: gray; */
+    > form#login-form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        gap: 1%;
+        /* background-color: rgb(255, 255, 0, 20%); */
+    }
+}
+
+label#username-label, label#password-label {
+    font-family: 'Lexend', sans-serif;
+    font-weight: 200;
+    font-size: 80%;
+    letter-spacing: 1px;
+}
+
+/* username input */
+input#username-input {
+    width: 98%;
+    height: 12%;
+    border-radius: 8px;
+    border: 0px solid white;
+    box-shadow: inset 2px 2px 4px rgb(0, 0, 0, 25%);
+    font-size: larger;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 300;
+}
+
+/* password input */
+input#password-input {
+    width: 98%;
+    height: 12%;
+    border-radius: 8px;
+    border: 0px solid white;
+    box-shadow: inset 2px 2px 4px rgb(0, 0, 0, 25%);
+    font-size: larger;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 300;
+}
+
+/* sign in button */
+input#sign-in-button {
+    width: 100%;
+    height: 12%;
+    border-radius: 8px;
+    border: 0px solid white;
+    font-size: small;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 300;
+    background-color: #E9DCC9;
+    box-shadow: 2px 2px 4px rgb(0, 0, 0, 25%);
+}
+
+/* END OF LOGIN PARENT CSS */
+
+/* LEFT DIV / WELCOME DIV */
+
+.welcome-text {
+    font-size: 30px;
+    font-family: 'Lexend Deca', sans-serif;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.sub-text {
+    font-size: 14px;
+    font-family: 'Lexend Deca', sans-serif;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+#sign-in-button {
+    background-color: #E9DCC9;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#sign-in-button:hover {
+    background-color: #d8c3a5;
+}

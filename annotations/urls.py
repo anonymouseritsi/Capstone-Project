@@ -8,6 +8,8 @@ router = DefaultRouter()
 router.register(r'images', ImageViewSet)
 router.register(r'annotations', AnnotationViewSet)
 
+app_name = 'patient_manager'
+
 urlpatterns = [
     path('api/', include(router.urls)),
     # path('', base, name='base')
@@ -15,11 +17,14 @@ urlpatterns = [
     path('', base, name='base'),
     path('annotate/', annotate_image, name='annotate'),
     path('patients/', patients_view, name='patients'),
+    path('patients/<str:name>/', views.patient_details, name='patient_details'),
+    path('patients/<str:name>/edit/', edit_patient, name='edit_patient'),
+    path('patients/<str:name>/delete/', delete_patient, name='delete_patient'),
     path('billing/', billing_view, name='billing'),
     path('reports/', reports_view, name='reports'),
     path('logout/', logout_view, name='logout'),
     path('add-patient/', add_patient, name='add_patient'),
     path('add-procedure/', add_procedure, name='add_procedure'),
     path('recent-patients/', recent_patients, name='recent_patients'),
-    path('patient/<int:patient_id>/upload-image/', upload_image_for_patient, name='upload_image'),
+    path('patient/<str:name>/upload-image/', upload_image_for_patient, name='upload_image'),
 ]
