@@ -22,6 +22,7 @@
   </div>
 
   <script>
+
     let canvas = new fabric.Canvas('canvas');
     let undoStack = [];
     let currentMode = null; // Current annotation mode (length or width)
@@ -187,6 +188,7 @@
             y2: obj.y2,
             label: currentMode === 'length' ? `Length: ${length.toFixed(2)} px` : `Width: ${Math.abs(obj.x2 - obj.x1).toFixed(2)} px`
           });
+          location.href = "{% url 'patient_manager:patients' %}"
         }
       });
 
