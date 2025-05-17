@@ -1,3 +1,247 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Line Annotation Tool with Length/Width Labels</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+  <style>
+    canvas { border: 1px solid black; }
+    #controls { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Line Annotation Tool with Length/Width Labels</h1>
+  <canvas id="canvas" width="800" height="600"></canvas>
+
+  <div id="controls">
+    <button onclick="setAnnotationMode('length')">Length Annotation</button>
+    <button onclick="setAnnotationMode('width')">Width Annotation</button>
+    <button onclick="saveAnnotations()">Save Annotations</button>
+    <button id="undoAnnotation">Undo</button>
+  </div>
+
+  <script>
+
+    let canvas = new fabric.Canvas('canvas');
+    let undoStack = [];
+    let currentMode = null; // Current annotation mode (length or width)
+
+    // Load the latest uploaded image from API
+    fetch('/api/images/')
+      .then(response => response.json())
+      .then(images => {
+        if (images.length > 0) {
+          let latestImage = images[images.length - 1];
+          let imageUrl = latestImage.image.startsWith("/")
+            ? window.location.origin + latestImage.image
+            : latestImage.image;
+
+          fabric.Image.fromURL(imageUrl, function(img) {
+            let maxWidth = 800;
+            let maxHeight = 600;
+            let scale = Math.min(maxWidth / img.width, maxHeight / img.height);
+            img.scale(scale);
+            img.set({
+              selectable: false,
+              evented: false,
+              hasControls: false,
+              lockMovementX: true,
+              lockMovementY: true,
+              lockScalingX: true,
+              lockScalingY: true,
+              lockRotation: true
+            });
+
+            canvas.setWidth(img.width);
+            canvas.setHeight(img.height);
+            canvas.add(img);
+            canvas.sendToBack(img);
+          });
+        } else {
+          alert("No images found. Please upload an image first.");
+        }
+      })
+      .catch(error => console.error("Error fetching images:", error));
+
+    // Function to set annotation mode (Length or Width)
+    function setAnnotationMode(mode) {
+      currentMode = mode;
+      alert(`${mode.charAt(0).toUpperCase() + mode.slice(1)} Annotation mode activated.`);
+    }
+
+    // Track all line annotations for undo
+    canvas.on('object:added', function(e) {
+      if (e.target.type === 'line') {
+        undoStack.push({line: e.target, label: e.target.label});
+      }
+    });
+
+    // Undo functionality
+    document.getElementById('undoAnnotation').addEventListener('click', function () {
+      if (undoStack.length > 0) {
+        let last = undoStack.pop();
+        canvas.remove(last.line);
+        canvas.remove(last.label);  // Remove label associated with the line
+        canvas.renderAll();
+      }
+    });
+
+    // Drawing a line for the annotation
+    let isDrawing = false;
+    let startPoint, endPoint, line, text;
+
+    canvas.on('mouse:down', function (event) {
+      if (!currentMode) {
+        alert("Please select an annotation mode first!");
+        return;
+      }
+
+      isDrawing = true;
+      let pointer = canvas.getPointer(event.e);
+      startPoint = pointer;
+
+      // Create an empty line
+      line = new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+        left: pointer.x,
+        top: pointer.y,
+        stroke: 'red',
+        strokeWidth: 2,
+        selectable: false,
+      });
+
+      // Create an empty label for length/width
+      text = new fabric.Text("", {
+        left: pointer.x,
+        top: pointer.y - 20,
+        fontSize: 14,
+        fill: 'black',
+        backgroundColor: 'white'
+      });
+
+      canvas.add(line);
+      canvas.add(text);
+
+      // Add label reference to the line object for easy removal later
+      line.label = text;
+    });
+
+    canvas.on('mouse:move', function (event) {
+      if (!isDrawing || !line) return;
+      let pointer = canvas.getPointer(event.e);
+      endPoint = pointer;
+
+      // Draw the line based on selected annotation mode
+      line.set({ 
+        x2: pointer.x, 
+        y2: pointer.y 
+      });
+
+      // Update label text to reflect length/width
+      let length = Math.sqrt(Math.pow(endPoint.x - startPoint.x, 2) + Math.pow(endPoint.y - startPoint.y, 2));
+
+      if (currentMode === 'length') {
+        // For length annotation, show the distance (length) between points
+        text.set({
+          text: `Length: ${length.toFixed(2)} px`,
+          left: (startPoint.x + endPoint.x) / 2,
+          top: (startPoint.y + endPoint.y) / 2 - 20
+        });
+      } else if (currentMode === 'width') {
+        // For width annotation, we check vertical or horizontal distance (width)
+        let width = currentMode === 'width' ? Math.abs(endPoint.x - startPoint.x) : Math.abs(endPoint.y - startPoint.y);
+        text.set({
+          text: `Width: ${width.toFixed(2)} px`,
+          left: (startPoint.x + endPoint.x) / 2,
+          top: (startPoint.y + endPoint.y) / 2 - 20
+        });
+      }
+
+      canvas.renderAll();
+    });
+
+    canvas.on('mouse:up', function () {
+      if (!isDrawing || !line) return;
+      isDrawing = false;
+
+      // Finalize the line and label
+      let annotation = {
+        line: line,
+        label: text
+      };
+      undoStack.push(annotation);  // Push the line and label to undo stack
+    });
+
+    // Save the annotations
+    function saveAnnotations() {
+      let annotations = [];
+      let imageId = 1; // Use real ID if needed
+
+      canvas.getObjects().forEach(obj => {
+        if (obj.type === 'line') {
+          let length = Math.sqrt(Math.pow(obj.x2 - obj.x1, 2) + Math.pow(obj.y2 - obj.y1, 2));
+          annotations.push({
+            image: imageId,
+            x1: obj.x1,
+            y1: obj.y1,
+            x2: obj.x2,
+            y2: obj.y2,
+            label: currentMode === 'length' ? `Length: ${length.toFixed(2)} px` : `Width: ${Math.abs(obj.x2 - obj.x1).toFixed(2)} px`
+          });
+          location.href = "{% url 'patient_manager:patients' %}"
+        }
+      });
+
+      if (annotations.length > 0) {
+        fetch('/api/annotations/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(annotations[0]) // Send the first annotation only
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log("Saved:", data);
+          alert("Annotation saved!");
+        });
+      }
+    }
+
+    // function saveAnnotations() {
+    //   let annotations = [];
+    //   let imageId = 1; // Use real ID if needed
+
+    //   canvas.getObjects().forEach(obj => {
+    //     if (obj.type === 'line') {
+    //       let length = Math.sqrt(Math.pow(obj.x2 - obj.x1, 2) + Math.pow(obj.y2 - obj.y1, 2));
+    //       annotations.push({
+    //         image: imageId,
+    //         x1: obj.x1,
+    //         y1: obj.y1,
+    //         x2: obj.x2,
+    //         y2: obj.y2,
+    //         label: currentMode === 'length' ? `Length: ${length.toFixed(2)} px` : `Width: ${Math.abs(obj.x2 - obj.x1).toFixed(2)} px`
+    //       });
+    //     }
+    //   });
+
+    //   if (annotations.length > 0) {
+    //     fetch('/api/annotations/', {
+    //       method: 'POST',
+    //       headers: { 'Content-Type': 'application/json' },
+    //       body: JSON.stringify(annotations[0]) // Send the first annotation only
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       console.log("Saved:", data);
+    //       alert("Annotation saved!");
+    //       window.location.href = "{% url 'patient_manager:patient_details' patient.name %}"; // Redirect to patient_details.html
+    //     });
+    //   }
+    // }
+   
+  </script> -->
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>

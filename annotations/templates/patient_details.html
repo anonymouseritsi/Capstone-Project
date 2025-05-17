@@ -30,7 +30,10 @@
     {% endfor %}
   </ul>
 
-<p><a href="{% url 'patient_manager:upload_image' patient.name %}">Upload Photos</a></p>
+<p>
+  <a href="{% url 'patient_manager:upload_image' patient.name %}">Upload Photos</a>
+  <a href="{% url 'patient_manager:download_patient_details' patient.name %}">Download Details</a>
+</p>
 
 <br>
 <a href="{% url 'patient_manager:edit_patient' patient.name %}">Edit Patient Information</a>
