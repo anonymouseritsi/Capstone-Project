@@ -27,4 +27,6 @@ urlpatterns = [
     path('add-procedure/', add_procedure, name='add_procedure'),
     path('recent-patients/', recent_patients, name='recent_patients'),
     path('patient/<str:name>/upload-image/', upload_image_for_patient, name='upload_image'),
+    path('patient/<str:name>/download_details/', views.download_patient_details, name='download_patient_details'),
+    path('annotate/<str:name>/', views.annotate_image, name='annotate_image'),
 ]

@@ -17,34 +17,34 @@
     </ul>
   </div>
 
-  <div class="procedures">
-    <h3>Procedures</h3>
-    <ul>
+<h2>Procedures</h2>
+<ul>
+  <li>
+      Procedure: {{ procedure.procedure_type|default:"No recorded procedure" }}
+    </li>
+    <li>
+      Date: {% if procedure.date %}{{ procedure.date }}{% else %}No recorded date{% endif %}
+    </li>
+    <li>
+      Notes: {{ procedure.notes|default:"No recorded notes" }}
+    </li>
+    <hr>
+</ul>
+  <p>Images:</p>
+  <ul>
+    {% for image in patient.images.all %}
       <li>
-        <span>Procedure:</span> {{ procedure.procedure_type|default:"No recorded procedure" }}
+        <img src="{{ image.image.url }}" alt="Image {{ forloop.counter }}">
       </li>
-      <li>
-        <span>Date:</span> {% if procedure.date %}{{ procedure.date }}{% else %}No recorded date{% endif %}
-      </li>
-      <li>
-        <span>Notes:</span> {{ procedure.notes|default:"No recorded notes" }}
-      </li>
-    </ul>
-  </div>
+    {% empty %}
+      <li>No images uploaded.</li>
+    {% endfor %}
+  </ul>
 
-  <div class="patient-info">
-    <h3>Images</h3>
-    <ul>
-      {% for image in patient.images.all %}
-        <li>
-          <img src="{{ image.image.url }}" alt="Image {{ forloop.counter }}">
-        </li>
-      {% empty %}
-        <li>No images uploaded.</li>
-      {% endfor %}
-    </ul>
-    <p><a href="{% url 'patient_manager:upload_image' patient.name %}">Upload Photos</a></p>
-  </div>
+<p>
+  <a href="{% url 'patient_manager:upload_image' patient.name %}">Upload Photos</a>
+  <a href="{% url 'patient_manager:download_patient_details' patient.name %}">Download Details</a>
+</p>
 
   <br>
   <a href="{% url 'patient_manager:edit_patient' patient.name %}">Edit Patient Information</a>
