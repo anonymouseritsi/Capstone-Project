@@ -59,40 +59,40 @@ Home
                         
                     </span>
                     <span class="add-text">
-
+                        Add Patient
                     </span>
                 </div>
-                <div class="view-analytics">
+                <div class="view-analytics" onclick="location.href='/analytics'" style="cursor: pointer;">
 
                 </div>
             </span>
             <span class="view-patient-container">
-                <div class="view-patients">
+                <div class="view-patients" onclick="location.href='/patients'" style="cursor: pointer;">
 
                 </div>
             </span>
         </div>
         <div class="recent-patients">
-
+            <div class="recent-span-text">
+                <p id="recentText">Recent Patients</p>
+            </div>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Sex</th>
+                    <th>Contact Number</th>
+                </tr>
+                {% for x in patient %}
+                    <tr style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' x.name %}';">
+                        <td>{{ x.name }}</td>
+                        <td>{{ x.age }}</td>
+                        <td>{{ x.sex }}</td>
+                        <td>{{ x.contact_number }}</td>
+                    </tr>
+                {% endfor %}
+            </table>    
         </div>
     </div>
  </div>
-    <script>
-        function darkenOverlay() {
-            document.getElementById('dark-overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.40)';
-            document.getElementById('iconText1').style.opacity = '1';
-            document.getElementById('iconText2').style.opacity = '1';
-            document.getElementById('iconText3').style.opacity = '1';
-            document.getElementById('iconText4').style.opacity = '1';
-
-
-        }
-        function lightenOverlay() {
-            document.getElementById('dark-overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
-            document.getElementById('iconText1').style.opacity = '0';
-            document.getElementById('iconText2').style.opacity = '0';
-            document.getElementById('iconText3').style.opacity = '0';
-            document.getElementById('iconText4').style.opacity = '0';
-        }
-    </script>
 {% endblock %}

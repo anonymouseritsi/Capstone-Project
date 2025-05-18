@@ -1,24 +1,86 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Patients - Doctor Dashboard{% endblock %}
 
 {% block content %}
-    <h1 class="text-2xl font-bold mb-4">Patient List</h1>
-    <p>This is the patient page.</p>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Sex</th>
-            <th>Contact Number</th>
-        </tr>
-        {% for x in patient %}
-            <tr style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' x.name %}';">
-                <td>{{ x.name }}</td>
-                <td>{{ x.age }}</td>
-                <td>{{ x.sex }}</td>
-                <td>{{ x.contact_number }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+<link rel="stylesheet" href="{% static 'css/patients.css' %}">
+<div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
+    <div class="logo">
+
+    </div>
+    <!-- side navigation buttons -->
+    <nav class="side-panel-icons">
+        <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText1">Home</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/patients';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/patient.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText2">Patients</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/billing';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/billing.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText3">Billing</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/analytics';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/analytics.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText4">Analytics</p>
+        </div>
+    </nav>
+    <!-- logout button -->
+    <div class="logout">
+
+    </div>
+</div>
+
+<!-- BODY CONTENT -->
+<header class="header-section">
+    <p id="headerText">
+        Patient's Gallery
+    </p>
+    <span class="search-span">
+        <div class="sort-button">
+            
+        </div>
+        <div class="search-container">
+
+        </div>
+    </span>
+</header>
+<section class="patient-list">
+    {% for x in patient %}
+    <div class="banner" style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' x.name %}';">
+        <div class="profile">
+            <span class="dot">
+
+            </span>
+        </div>
+        <div class="patient-info">
+            <div class="patient-name">
+                Name : {{ x.name }}
+            </div>
+            <div class="patient-age-sex">
+                <span class="age">
+                    Age : {{ x.age }}
+                </span>
+                <span class="sex">
+                    Sex : {{ x.sex }}
+                </span>
+            </div>
+            <div class="patient-date">
+                Date : {{ x.created_at }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</section>
 {% endblock %}

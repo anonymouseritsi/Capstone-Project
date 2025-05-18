@@ -15,7 +15,11 @@ class AnnotationViewSet(viewsets.ModelViewSet):
     serializer_class = AnnotationSerializer
 
 def home(request):
-    return render(request,'home.html')
+    all_patients = Patient.objects.all().order_by('-created_at')
+    context = {
+        'patient': all_patients,
+    }
+    return render(request,'home.html', context)
 
 def base(request):
     return render(request,'base.html')

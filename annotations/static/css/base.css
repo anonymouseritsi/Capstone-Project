@@ -2,8 +2,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend:wght@100..900&display=swap');
 
+html, body {
+    height: 100%; /* sets the height to the full height of the viewport */
+    margin: 0; /* removes any default margins */
+    padding: 0; /* removes any default padding */
+}
 
 body {
-    background-color: #FBFBFB;
-    width: auto;
+  background-color: #FBFBFB;
+  width: auto;
+  height: 100vh; /* sets the height to the full height of the viewport */
+  margin: 0; /* removes any default margins */
+  padding: 0; /* removes any default padding */
+  font-family: 'Lexend', sans-serif; /* sets the font family to Lexend */
 }
