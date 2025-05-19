@@ -185,14 +185,12 @@
 <!-- GALLERY CONTENT -->
 <section class="gallery-container">
   <div class="add-photos" onclick="window.location.href='{% url 'patient_manager:upload_image' patient.name %}'">
-    DETAILS
+
   </div>
-  <!-- {% for x in patient.images.all %}
-    {% if image.annotated_image %}
-        <div class="photos">
-            <img src="{{ x.annotated_image.url }}" alt="{{ for.loop.counter }}" class="cover-image">
-        </div>
-    {% endif %}
-  {% endfor %} -->
+  {% for x in patient.images.all %}
+  <div class="photos">
+      <img src="{{ x.image.url }}" alt="{{ for.loop.counter }}" class="cover-image">
+  </div>
+  {% endfor %}
 </section>
 {% endblock %}
