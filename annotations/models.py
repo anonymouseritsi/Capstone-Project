@@ -18,7 +18,29 @@ class Patient(models.Model):
 
     def __str__(self):
         return self.name
+    
+    #procedure cost
+    def total_procedure_cost(self):
+        return sum(procedure.get_price() for procedure in self.procedures.all())
 
+# class Procedure(models.Model):
+#     PROCEDURE_CHOICES = [
+#         ('abdominal', 'Abdominal'),
+#         ('pelvic', 'Pelvic'),
+#         ('obstetric', 'Obstetric'),
+#         ('thyroid', 'Thyroid'),
+#         ('breast', 'Breast'),
+#     ]
+
+#     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='procedures', null=True)
+#     procedure_type = models.CharField(max_length=20, choices=PROCEDURE_CHOICES) 
+#     notes = models.TextField(blank=True, null=True)
+#     date = models.DateField(auto_now_add=True)
+
+#     def __str__(self):
+#         return f"{self.procedure_type} - {self.patient.name}"
+
+#procedure cost
 class Procedure(models.Model):
     PROCEDURE_CHOICES = [
         ('abdominal', 'Abdominal'),
@@ -28,6 +50,14 @@ class Procedure(models.Model):
         ('breast', 'Breast'),
     ]
 
+    PRICE_MAPPING = {
+        'abdominal': 3000,
+        'pelvic': 2000,
+        'obstetric': 5000,
+        'thyroid': 5500,
+        'breast': 6000,
+    }
+
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='procedures', null=True)
     procedure_type = models.CharField(max_length=20, choices=PROCEDURE_CHOICES) 
     notes = models.TextField(blank=True, null=True)
@@ -35,6 +65,9 @@ class Procedure(models.Model):
 
     def __str__(self):
         return f"{self.procedure_type} - {self.patient.name}"
+
+    def get_price(self):
+        return self.PRICE_MAPPING.get(self.procedure_type, 0)
 
 
 class Image(models.Model):

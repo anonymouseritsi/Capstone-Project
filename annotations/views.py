@@ -35,9 +35,13 @@ def patients_view(request):
 def patient_details(request, name):
     patient = get_object_or_404(Patient, name=name)
     procedure = patient.procedures.first()
+    #bagong dagdag
+    total_cost = patient.total_procedure_cost()
     context = {
         'patient': patient,
         'procedure': procedure,
+        #bagong dagdag
+        'total_cost': total_cost,
     }
     return render(request, 'patient_details.html', context)
 
