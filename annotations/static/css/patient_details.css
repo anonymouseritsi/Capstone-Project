@@ -259,3 +259,12 @@ div.navigation-buttons-parent {
   }
 }
 
+/* GALLERY CSS */
+section.gallery-container {
+  height: 100%;
+  width: 100%;
+  background-color: yellow;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
