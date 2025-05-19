@@ -1,10 +1,21 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Patients Details - Doctor Dashboard{% endblock %}
 
 {% block content %}
-<h1>{{ patient.name }}'s Details</h1>
-<p>Age: {{ patient.age }}</p>
+<link rel="stylesheet" href="{% static 'css/patient_details.css' %}">
+
+<div class="patient-details">
+
+  <h1>{{ patient.name }}'s Details</h1>
+
+  <div class="patient-info">
+    <h3>Basic Info</h3>
+    <ul>
+      <li><span>Age:</span> {{ patient.age }}</li>
+    </ul>
+  </div>
 
 <h2>Procedures</h2>
 <ul>
@@ -48,9 +59,10 @@
   <a href="{% url 'patient_manager:download_patient_details' patient.name %}">Download Details</a>
 </p>
 
-<br>
-<a href="{% url 'patient_manager:edit_patient' patient.name %}">Edit Patient Information</a>
-<br>
-<a href="{% url 'patient_manager:delete_patient' patient.name %}">Delete Patient Record</a>
+  <br>
+  <a href="{% url 'patient_manager:edit_patient' patient.name %}">Edit Patient Information</a>
+  <br>
+  <a href="{% url 'patient_manager:delete_patient' patient.name %}">Delete Patient Record</a>
 
+</div>
 {% endblock %}

@@ -1,0 +1,166 @@
+div.side-panel {
+    height: 100%;
+    width: 12%;
+    background-color: #E9DCC9;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    transition: all 0.6s ease-in-out;
+    > div.logout {
+        height: 10%;
+        width: 100%;
+        background-color: red;
+    }
+    > div.logo {
+        height: 10%;
+        width: 100%;
+        /* background-color: red; */
+    }
+}
+
+nav.side-panel-icons {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    height: 50%;
+    width: 100%;
+    gap: 5%;
+    /* background-color: yellow; */
+}
+
+div.home-icon {
+    /* border: 1px solid white; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+div.home-icon:hover{
+    box-shadow: 0px 1px 5px gray;
+}
+
+span.icon-span {
+    margin-left: 2vh;
+    img#icons {
+        height: 5vh; width: 5vh;
+    }
+}
+
+p#iconText1, p#iconText2, p#iconText3, p#iconText4 {
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+    transition-delay: 0.5s;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 200;
+    font-size: 1.5rem;
+    margin-left: 3vh;
+    margin-right: 2vh;
+}
+
+/* BODY HTML */
+header.header-section {
+    height: 10%;
+    width: auto;
+    /* background-color: red; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin-left: 12%;
+    > p#headerText {
+        font-weight: 300;
+        margin: 2%;
+    }
+}
+span.search-span {
+    height: 100%;
+    width: 50%;
+    /* background-color: green; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2%;
+    > div.search-container {
+        height: 50%;
+        width: 60%;
+        background-color: yellow;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2%;
+    }
+    > div.sort-button {
+        height: 5vh; width: 5vh; 
+        background-color: lightgray;
+    }
+}
+
+section.patient-list {
+    height: 100vh;
+    width: auto;
+    /* background-color: green; */
+    margin-left: 12%;
+    display: flex;
+    flex-wrap: wrap;
+    > div.banner {
+        height: 42vh;
+        width: 35vh;
+        border: 1px solid red;
+        margin-left: 2%;
+        > div.profile {
+            height: 10%; width: auto;
+            /* border: 1px solid black; */
+            margin-top: 10%;
+            margin-bottom: 8%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+    > div .patient-info {
+        height: 75%; width: auto;
+        /* border: 1px solid yellow; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 2%;
+        gap: 2%;
+        > div.patient-name, div.patient-age-sex, div.patient-date {
+            height: 25%; width: 100%;
+            border: 1px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        > div.patient-age-sex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            > span.age, span.sex {
+                height: 100%; width: 50%;
+                /* border: 1px solid black; */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+}
+
+/* CSS FOR THE PROFILE PIC */
+span.dot {
+    height: 7vh;
+    width: 7vh;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
