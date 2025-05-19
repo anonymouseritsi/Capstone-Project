@@ -36,16 +36,12 @@ class Procedure(models.Model):
     def __str__(self):
         return f"{self.procedure_type} - {self.patient.name}"
 
-# class Image(models.Model):
-#     title = models.CharField(max_length=255, blank=True, null=True)
-#     image = models.ImageField(upload_to='images/')
-#     def __str__(self):
-#         return self.title if self.title else "Image"
+
 class Image(models.Model):
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name='images', null=True)
     image = models.ImageField(upload_to='uploads/')
     uploaded_at = models.DateTimeField(auto_now_add=True, null=True)
-
+    annotated_image = models.ImageField(upload_to='annotated_images/', null=True, blank=True)
     def __str__(self):
         return f"Image for {self.patient.name} at {self.uploaded_at}"
     

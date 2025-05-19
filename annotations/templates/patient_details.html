@@ -41,6 +41,19 @@
     {% endfor %}
   </ul>
 
+<p>Annotated Images:</p>
+<ul>
+  {% for image in patient.images.all %}
+    {% if image.annotated_image %}
+      <li>
+        <img src="{{ image.annotated_image.url }}" alt="Annotated Image {{ forloop.counter }}">
+      </li>
+    {% endif %}
+  {% empty %}
+    <li>No annotated images available.</li>
+  {% endfor %}
+</ul>
+
 <p>
   <a href="{% url 'patient_manager:upload_image' patient.name %}">Upload Photos</a>
   <a href="{% url 'patient_manager:download_patient_details' patient.name %}">Download Details</a>

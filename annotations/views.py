@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PatientForm, ProcedureForm
 from .models import *
 from .forms import ImageUploadForm
+import base64
+from django.core.files.base import ContentFile
 
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = Image.objects.all()
@@ -15,11 +17,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
     serializer_class = AnnotationSerializer
 
 def home(request):
-    all_patients = Patient.objects.all().order_by('-created_at')
-    context = {
-        'patient': all_patients,
-    }
-    return render(request,'home.html', context)
+    return render(request,'home.html')
 
 def base(request):
     return render(request,'base.html')
@@ -83,6 +81,7 @@ def add_patient(request):
     return render(request, 'add_patient.html', {'form': form})
 
 def add_procedure(request):
+
     if request.method == 'POST':
         form = ProcedureForm(request.POST)
         if form.is_valid():
@@ -105,13 +104,28 @@ def upload_image_for_patient(request, name):
             image = form.save(commit=False)
             image.patient = patient
             image.save()
-            return redirect('patient_manager:annotate')  # or show confirmation
+            return redirect('patient_manager:annotate', name=patient.name)  # or show confirmation
     else:
         form = ImageUploadForm()
     return render(request, 'upload_image.html', {'form': form, 'patient': patient})
 
 
+def save_annotation(request, name):
+    if request.method == 'POST':
+        patient = get_object_or_404(Patient, name=name)
+        data_url = request.POST.get('imageData')
 
+        if data_url:
+            format, imgstr = data_url.split(';base64,') 
+            ext = format.split('/')[-1]  
+            data = ContentFile(base64.b64decode(imgstr), name=f'annotated_{patient.name}.{ext}')
+
+            latest_image = patient.images.last()
+            if latest_image:
+                latest_image.annotated_image.save(data.name, data)
+                latest_image.save()
+
+        return redirect('patient_manager:patient_details', name=patient.name)
 from docx import Document
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -144,24 +158,34 @@ def download_patient_details(request, name):
         paragraph = document.add_paragraph()
         paragraph.add_run(f"Image {image.id}:")
 
-        # Fix: Use absolute URL
-        relative_url = image.image.url  # e.g. '/media/uploads/image.jpg'
-        full_url = request.build_absolute_uri(relative_url)
-
+        # Original Image
         try:
-            img_response = requests.get(full_url)
+            original_url = request.build_absolute_uri(image.image.url)
+            img_response = requests.get(original_url)
             img_response.raise_for_status()
-        except requests.RequestException as e:
-            paragraph.add_run(f" (Image could not be loaded: {e})")
-            continue
 
-        with NamedTemporaryFile(suffix='.jpg', delete=False) as tmp:
-            tmp.write(img_response.content)
-            tmp.flush()
-            try:
+            with NamedTemporaryFile(suffix='.jpg', delete=False) as tmp:
+                tmp.write(img_response.content)
+                tmp.flush()
+                document.add_paragraph("Original Image:")
                 document.add_picture(tmp.name, width=None)
-            except Exception as e:
-                paragraph.add_run(f" (Failed to insert image: {e})")
+        except requests.RequestException as e:
+            document.add_paragraph(f"(Original image could not be loaded: {e})")
+
+        # Annotated Image (if available)
+        if image.annotated_image:
+            try:
+                annotated_url = request.build_absolute_uri(image.annotated_image.url)
+                ann_response = requests.get(annotated_url)
+                ann_response.raise_for_status()
+
+                with NamedTemporaryFile(suffix='.jpg', delete=False) as ann_tmp:
+                    ann_tmp.write(ann_response.content)
+                    ann_tmp.flush()
+                    document.add_paragraph("Annotated Image:")
+                    document.add_picture(ann_tmp.name, width=None)
+            except requests.RequestException as e:
+                document.add_paragraph(f"(Annotated image could not be loaded: {e})")
 
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -172,8 +196,8 @@ def download_patient_details(request, name):
     return response
 
 
+
 def annotate_image(request, name):
     patient = get_object_or_404(Patient, name=name)
-    context = {'patient': patient}
-    return render(request, 'annotate.html', context)
+    return render(request, 'annotate.html', {'patient': patient})
 
