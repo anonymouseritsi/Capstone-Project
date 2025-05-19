@@ -17,7 +17,11 @@ class AnnotationViewSet(viewsets.ModelViewSet):
     serializer_class = AnnotationSerializer
 
 def home(request):
-    return render(request,'home.html')
+    patients = Patient.objects.all().order_by('-created_at')
+    context = {
+        'patients': patients
+    }
+    return render(request,'home.html', context)
 
 def base(request):
     return render(request,'base.html')
@@ -26,7 +30,7 @@ def annotate_image(request):
     return render(request, 'annotate.html')
 
 def patients_view(request):
-    all_patients = Patient.objects.all()
+    all_patients = Patient.objects.all().order_by('-created_at')
     context = {
         'patient': all_patients,
     }
@@ -38,6 +42,7 @@ def patient_details(request, name):
     context = {
         'patient': patient,
         'procedure': procedure,
+        'Procedure': Procedure,
     }
     return render(request, 'patient_details.html', context)
 
@@ -93,7 +98,7 @@ def add_procedure(request):
 
 
 def recent_patients(request):
-    patients = Patient.objects.all().order_by('-id')[:10]  # Most recent 10
+    patients = Patient.objects.all().order_by('-created_at')[:10]  # Most recent 10
     return render(request, 'recent_patients.html', {'patients': patients})
 
 def upload_image_for_patient(request, name):

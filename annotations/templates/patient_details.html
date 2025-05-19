@@ -5,9 +5,46 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/patient_details.css' %}">
+<div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
+    <div class="logo">
 
-<div class="patient-details">
+    </div>
+    <!-- side navigation buttons -->
+    <nav class="side-panel-icons">
+        <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText1">Home</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/patients';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/patient.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText2">Patients</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/billing';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/billing.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText3">Billing</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/analytics';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/analytics.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText4">Analytics</p>
+        </div>
+    </nav>
+    <!-- logout button -->
+    <div class="logout">
 
+    </div>
+</div>
+
+<!-- BODY HTML -->
+
+<!-- <div class="patient-details">
   <h1>{{ patient.name }}'s Details</h1>
 
   <div class="patient-info">
@@ -64,5 +101,85 @@
   <br>
   <a href="{% url 'patient_manager:delete_patient' patient.name %}">Delete Patient Record</a>
 
-</div>
+</div> -->
+
+<header class="patient-details-container">
+  <section class="patient-details">
+    <span class="patient-pic">
+
+    </span>
+    <span class="patient-information">
+      <div class="patient-name">
+        <span>
+          Name : 
+        </span>
+        <span>
+          <b>{{ patient.name }}</b>
+        </span>
+      </div>
+      <div class="patient-age">
+        <span>
+          Age : 
+        </span>
+        <span>
+          <b>{{ patient.age }}</b>
+        </span>
+      </div>
+      <div class="patient-sex">
+        <span>
+          Sex : 
+        </span>
+        <span>
+          <b>{{ patient.sex }}</b>
+        </span>
+      </div>
+    </span>
+  </section>
+  <section class="patient-procedures">
+    <div class="dropdown-procedures" id="proceduresDropdown">
+      <button class="dropdown-toggle">Procedure : {{ procedure.get_procedure_type_display|default:"No recorded procedure" }}</button>
+      <div class="dropdown-menu">
+        {% for choice in Procedure.PROCEDURE_CHOICES %}
+          <a href="#" class="dropdown-item">{{ choice.1 }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- JS FOR THE DROPDOWN -->
+<script>
+  const dropdown = document.getElementById('proceduresDropdown');
+  const toggle = dropdown.querySelector('.dropdown-toggle');
+
+  toggle.addEventListener('click', function () {
+    dropdown.classList.toggle('open');
+  });
+
+  // Close dropdown if clicked outside
+  window.addEventListener('click', function (e) {
+    if (!dropdown.contains(e.target)) {
+      dropdown.classList.remove('open');
+    }
+  });
+</script>
+  </section>
+  <section class="patient-actions">
+    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:download_patient_details' patient.name %}'">
+      Download Details
+    </div>
+    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:edit_patient' patient.name %}'">
+      Edit Patient Information
+    </div>
+    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:delete_patient' patient.name %}'">
+      Delete Patient Record
+    </div>
+  </section>
+</header>
+<!-- NAVIGATION FOLDER BUTTONS -->
+<section class="navigation-buttons-container">
+  <div class="navigation-buttons-parent">
+    <button id="navigationButton">Patient Details</button>
+    <button id="navigationButton">Gallery</button>
+    <button id="navigationButton">Annotated Gallery</button>
+  </div>
+</section>
+
 {% endblock %}

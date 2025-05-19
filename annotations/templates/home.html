@@ -83,7 +83,7 @@ Home
                     <th>Sex</th>
                     <th>Contact Number</th>
                 </tr>
-                {% for x in patient %}
+                {% for x in patients %}
                     <tr style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' x.name %}';">
                         <td>{{ x.name }}</td>
                         <td>{{ x.age }}</td>
