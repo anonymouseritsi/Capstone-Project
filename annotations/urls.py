@@ -15,7 +15,6 @@ urlpatterns = [
     # path('', base, name='base')
     path('home/', views.home, name='home'),
     path('', base, name='base'),
-    path('annotate/', annotate_image, name='annotate'),
     path('patients/', patients_view, name='patients'),
     path('patients/<str:name>/', views.patient_details, name='patient_details'),
     path('patients/<str:name>/edit/', edit_patient, name='edit_patient'),
@@ -28,5 +27,6 @@ urlpatterns = [
     path('recent-patients/', recent_patients, name='recent_patients'),
     path('patient/<str:name>/upload-image/', upload_image_for_patient, name='upload_image'),
     path('patient/<str:name>/download_details/', views.download_patient_details, name='download_patient_details'),
-    path('annotate/<str:name>/', views.annotate_image, name='annotate_image'),
+    path('annotate/<str:name>/', views.annotate_image, name='annotate'),
+    path('save-annotation/<str:name>/', views.save_annotation, name='save_annotation'),
 ]

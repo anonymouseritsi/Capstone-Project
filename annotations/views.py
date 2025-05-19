@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PatientForm, ProcedureForm
 from .models import *
 from .forms import ImageUploadForm
+import base64
+from django.core.files.base import ContentFile
 
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = Image.objects.all()
@@ -79,6 +81,7 @@ def add_patient(request):
     return render(request, 'add_patient.html', {'form': form})
 
 def add_procedure(request):
+
     if request.method == 'POST':
         form = ProcedureForm(request.POST)
         if form.is_valid():
@@ -101,42 +104,28 @@ def upload_image_for_patient(request, name):
             image = form.save(commit=False)
             image.patient = patient
             image.save()
-            return redirect('patient_manager:annotate')  # or show confirmation
+            return redirect('patient_manager:annotate', name=patient.name)  # or show confirmation
     else:
         form = ImageUploadForm()
     return render(request, 'upload_image.html', {'form': form, 'patient': patient})
 
-# from docx import Document
-# from django.http import HttpResponse
 
-# def download_patient_details(request, name):
-#     patient = get_object_or_404(Patient, name=name)
-#     procedure = patient.procedures.first()
+def save_annotation(request, name):
+    if request.method == 'POST':
+        patient = get_object_or_404(Patient, name=name)
+        data_url = request.POST.get('imageData')
 
-#     document = Document()
-#     document.add_heading('Patient Details', 0)
+        if data_url:
+            format, imgstr = data_url.split(';base64,') 
+            ext = format.split('/')[-1]  
+            data = ContentFile(base64.b64decode(imgstr), name=f'annotated_{patient.name}.{ext}')
 
-#     paragraph = document.add_paragraph()
-#     paragraph.add_run(f"Name: {patient.name}")
-#     paragraph.add_run(f"\nAge: {patient.age}")
+            latest_image = patient.images.last()
+            if latest_image:
+                latest_image.annotated_image.save(data.name, data)
+                latest_image.save()
 
-#     document.add_heading('Procedures', 1)
-#     paragraph = document.add_paragraph()
-#     paragraph.add_run(f"Procedure: {procedure.procedure_type}")
-#     paragraph.add_run(f"\nDate: {procedure.date}")
-#     paragraph.add_run(f"\nNotes: {procedure.notes}")
-
-#     document.add_heading('Images', 1)
-#     for image in patient.images.all():
-#         paragraph = document.add_paragraph()
-#         paragraph.add_run(f"Image {image.id}: {image.image.url}")
-
-#     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-#     response['Content-Disposition'] = f'attachment; filename={patient.name}_details.docx'
-#     document.save(response)
-
-#     return response
-
+        return redirect('patient_manager:patient_details', name=patient.name)
 from docx import Document
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -169,24 +158,34 @@ def download_patient_details(request, name):
         paragraph = document.add_paragraph()
         paragraph.add_run(f"Image {image.id}:")
 
-        # Fix: Use absolute URL
-        relative_url = image.image.url  # e.g. '/media/uploads/image.jpg'
-        full_url = request.build_absolute_uri(relative_url)
-
+        # Original Image
         try:
-            img_response = requests.get(full_url)
+            original_url = request.build_absolute_uri(image.image.url)
+            img_response = requests.get(original_url)
             img_response.raise_for_status()
-        except requests.RequestException as e:
-            paragraph.add_run(f" (Image could not be loaded: {e})")
-            continue
 
-        with NamedTemporaryFile(suffix='.jpg', delete=False) as tmp:
-            tmp.write(img_response.content)
-            tmp.flush()
-            try:
+            with NamedTemporaryFile(suffix='.jpg', delete=False) as tmp:
+                tmp.write(img_response.content)
+                tmp.flush()
+                document.add_paragraph("Original Image:")
                 document.add_picture(tmp.name, width=None)
-            except Exception as e:
-                paragraph.add_run(f" (Failed to insert image: {e})")
+        except requests.RequestException as e:
+            document.add_paragraph(f"(Original image could not be loaded: {e})")
+
+        # Annotated Image (if available)
+        if image.annotated_image:
+            try:
+                annotated_url = request.build_absolute_uri(image.annotated_image.url)
+                ann_response = requests.get(annotated_url)
+                ann_response.raise_for_status()
+
+                with NamedTemporaryFile(suffix='.jpg', delete=False) as ann_tmp:
+                    ann_tmp.write(ann_response.content)
+                    ann_tmp.flush()
+                    document.add_paragraph("Annotated Image:")
+                    document.add_picture(ann_tmp.name, width=None)
+            except requests.RequestException as e:
+                document.add_paragraph(f"(Annotated image could not be loaded: {e})")
 
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -196,23 +195,9 @@ def download_patient_details(request, name):
 
     return response
 
-# def annotate_image(request):
-#     patient = get_object_or_404(Patient, name=request.GET.get('name'))
-#     return render(request, 'annotate.html', {'patient': patient})
+
 
 def annotate_image(request, name):
     patient = get_object_or_404(Patient, name=name)
     return render(request, 'annotate.html', {'patient': patient})
 
-# def annotate_image(request):
-#     if 'name' in request.GET:
-#         patient = get_object_or_404(Patient, name=request.GET.get('name'))
-#     else:
-#         # Handle the case where the name parameter is not provided
-#         # For example, you could redirect to a page that asks the user to enter the patient's name
-#         return redirect('patient_list')
-#     return render(request, 'annotate.html', {'patient': patient})
-
-# def annotate_image(request, patient_id):
-#     patient = get_object_or_404(Patient, pk=patient_id)
-#     return render(request, 'annotate.html', {'patient': patient})
