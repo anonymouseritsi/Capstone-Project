@@ -76,7 +76,7 @@ span.icon-span {
 }
 
 p#iconText1, p#iconText2, p#iconText3, p#iconText4 {
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.3s ease-in;
     transition-delay: 0.5s;
     font-family: 'Lexend', sans-serif;

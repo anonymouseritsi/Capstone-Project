@@ -110,36 +110,7 @@ def upload_image_for_patient(request, name):
         form = ImageUploadForm()
     return render(request, 'upload_image.html', {'form': form, 'patient': patient})
 
-# from docx import Document
-# from django.http import HttpResponse
 
-# def download_patient_details(request, name):
-#     patient = get_object_or_404(Patient, name=name)
-#     procedure = patient.procedures.first()
-
-#     document = Document()
-#     document.add_heading('Patient Details', 0)
-
-#     paragraph = document.add_paragraph()
-#     paragraph.add_run(f"Name: {patient.name}")
-#     paragraph.add_run(f"\nAge: {patient.age}")
-
-#     document.add_heading('Procedures', 1)
-#     paragraph = document.add_paragraph()
-#     paragraph.add_run(f"Procedure: {procedure.procedure_type}")
-#     paragraph.add_run(f"\nDate: {procedure.date}")
-#     paragraph.add_run(f"\nNotes: {procedure.notes}")
-
-#     document.add_heading('Images', 1)
-#     for image in patient.images.all():
-#         paragraph = document.add_paragraph()
-#         paragraph.add_run(f"Image {image.id}: {image.image.url}")
-
-#     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-#     response['Content-Disposition'] = f'attachment; filename={patient.name}_details.docx'
-#     document.save(response)
-
-#     return response
 
 from docx import Document
 from django.http import HttpResponse
@@ -200,23 +171,9 @@ def download_patient_details(request, name):
 
     return response
 
-# def annotate_image(request):
-#     patient = get_object_or_404(Patient, name=request.GET.get('name'))
-#     return render(request, 'annotate.html', {'patient': patient})
 
 def annotate_image(request, name):
     patient = get_object_or_404(Patient, name=name)
-    return render(request, 'annotate.html', {'patient': patient})
+    context = {'patient': patient}
+    return render(request, 'annotate.html', context)
 
-# def annotate_image(request):
-#     if 'name' in request.GET:
-#         patient = get_object_or_404(Patient, name=request.GET.get('name'))
-#     else:
-#         # Handle the case where the name parameter is not provided
-#         # For example, you could redirect to a page that asks the user to enter the patient's name
-#         return redirect('patient_list')
-#     return render(request, 'annotate.html', {'patient': patient})
-
-# def annotate_image(request, patient_id):
-#     patient = get_object_or_404(Patient, pk=patient_id)
-#     return render(request, 'annotate.html', {'patient': patient})
