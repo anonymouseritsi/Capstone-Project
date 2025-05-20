@@ -6,11 +6,13 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/patient_details.css' %}">
 <div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
-    <div class="logo">
-
-    </div>
     <!-- side navigation buttons -->
     <nav class="side-panel-icons">
+           <div class="home-icon">
+            <span class="icon-span">
+                <img src="logo" alt="logo" id="icons">
+            </span>
+        </div>
         <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
             <span class="icon-span">
                 <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
@@ -93,14 +95,14 @@
 
 <p>
   <p><strong>Total Bill:</strong> {{ total_cost }} pesos</p> 
-  <a href="{% url 'patient_manager:upload_image' patient.name %}">Upload Photos</a>
-  <a href="{% url 'patient_manager:download_patient_details' patient.name %}">Download Details</a>
+  <a href="{% url 'patient_manager:upload_image' patient.slug %}">Upload Photos</a>
+  <a href="{% url 'patient_manager:download_patient_details' patient.slug %}">Download Details</a>
 </p>
 
   <br>
-  <a href="{% url 'patient_manager:edit_patient' patient.name %}">Edit Patient Information</a>
+  <a href="{% url 'patient_manager:edit_patient' patient.slug %}">Edit Patient Information</a>
   <br>
-  <a href="{% url 'patient_manager:delete_patient' patient.name %}">Delete Patient Record</a>
+  <a href="{% url 'patient_manager:delete_patient' patient.slug %}">Delete Patient Record</a>
 
 </div> -->
 
@@ -163,13 +165,13 @@
 </script>
   </section>
   <section class="patient-actions">
-    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:download_patient_details' patient.name %}'">
+    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:download_patient_details' patient.slug %}'">
       Download Details
     </div>
-    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:edit_patient' patient.name %}'">
+    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:edit_patient' patient.slug %}'">
       Edit Patient Information
     </div>
-    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:delete_patient' patient.name %}'">
+    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:delete_patient' patient.slug %}'">
       Delete Patient Record
     </div>
   </section>
@@ -177,14 +179,14 @@
 <!-- NAVIGATION FOLDER BUTTONS -->
 <section class="navigation-buttons-container">
   <div class="navigation-buttons-parent">
-    <button id="navigationButton" onclick=window.location.href="{% url 'patient_manager:patient_details' patient.name %}">Patient Details</button>
-    <button id="navigationButton" onclick=window.location.href="{% url 'patient_manager:patient_details_gallery' patient.name %}">Gallery</button>
-    <button id="navigationButton" onclick=window.location.href="{% url 'patient_manager:patient_details_gallery_annotated' patient.name %}">Annotated Gallery</button>
+    <button id="navigationButton" onclick=window.location.href="{% url 'patient_manager:patient_details' patient.slug %}">Patient Details</button>
+    <button id="navigationButton" onclick=window.location.href="{% url 'patient_manager:patient_details_gallery' patient.slug %}">Gallery</button>
+    <button id="navigationButton" onclick=window.location.href="{% url 'patient_manager:patient_details_gallery_annotated' patient.slug %}">Annotated Gallery</button>
   </div>
 </section>
 <!-- GALLERY CONTENT -->
 <section class="gallery-container">
-  <div class="add-photos" onclick="window.location.href='{% url 'patient_manager:upload_image' patient.name %}'">
+  <div class="add-photos" onclick="window.location.href='{% url 'patient_manager:upload_image' patient.slug %}'">
     DETAILS
   </div>
   <!-- {% for x in patient.images.all %}

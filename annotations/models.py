@@ -3,6 +3,7 @@ from django.utils.timezone import now
 from django.utils import timezone
 from django.db import models
 from django.conf import settings
+from django.utils.text import slugify
 
 class Patient(models.Model):
     SEX_CHOICES = [
@@ -10,14 +11,25 @@ class Patient(models.Model):
         ('F', 'Female'),
     ]
 
-    name = models.CharField(max_length=100, unique=True)
+    # name = models.CharField(max_length=100, unique=True)
+    first_name = models.CharField(max_length=50, default="")
+    middle_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, default="")
     age = models.PositiveIntegerField()
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
     contact_number = models.CharField(max_length=11)
     created_at = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.slug:
+            base_slug = slugify(f"{self.first_name}-{self.last_name}-{self.id}")
+            self.slug = base_slug
+            self.save(update_fields=['slug'])
 
     def __str__(self):
-        return self.name
+        return f"{self.first_name} {self.last_name}"
     
     #procedure cost
     def total_procedure_cost(self):

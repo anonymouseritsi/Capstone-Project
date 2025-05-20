@@ -36,8 +36,8 @@ def patients_view(request):
     }
     return render(request, 'patients.html', context)
 
-def patient_details(request, name):
-    patient = get_object_or_404(Patient, name=name)
+def patient_details(request, slug):
+    patient = get_object_or_404(Patient, slug=slug)
     procedure = patient.procedures.first()
     #bagong dagdag
     total_cost = patient.total_procedure_cost()
@@ -49,8 +49,8 @@ def patient_details(request, name):
     }
     return render(request, 'patient_details.html', context)
 
-def patient_details_gallery(request, name):
-    patient = get_object_or_404(Patient, name=name)
+def patient_details_gallery(request, slug):
+    patient = get_object_or_404(Patient, slug=slug)
     procedure = patient.procedures.first()
     #bagong dagdag
     total_cost = patient.total_procedure_cost()
@@ -62,8 +62,8 @@ def patient_details_gallery(request, name):
     }
     return render(request, 'patient_details_gallery.html', context)
 
-def patient_details_gallery_annotated(request, name):
-    patient = get_object_or_404(Patient, name=name)
+def patient_details_gallery_annotated(request, slug):
+    patient = get_object_or_404(Patient, slug=slug)
     procedure = patient.procedures.first()
     #bagong dagdag
     total_cost = patient.total_procedure_cost()
@@ -130,52 +130,53 @@ def recent_patients(request):
     patients = Patient.objects.all().order_by('-created_at')[:10]  # Most recent 10
     return render(request, 'recent_patients.html', {'patients': patients})
 
-def upload_image_for_patient(request, name):
-    patient = Patient.objects.get(name=name)
+def upload_image_for_patient(request, slug):
+    patient = Patient.objects.get(slug=slug)
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             image = form.save(commit=False)
             image.patient = patient
             image.save()
-            return redirect('patient_manager:annotate', name=patient.name)  # or show confirmation
+            return redirect('patient_manager:annotate', slug=patient.slug)  # or show confirmation
     else:
         form = ImageUploadForm()
     return render(request, 'upload_image.html', {'form': form, 'patient': patient})
 
 
-def save_annotation(request, name):
+def save_annotation(request, slug):
     if request.method == 'POST':
-        patient = get_object_or_404(Patient, name=name)
+        patient = get_object_or_404(Patient, slug=slug)
         data_url = request.POST.get('imageData')
 
         if data_url:
             format, imgstr = data_url.split(';base64,') 
             ext = format.split('/')[-1]  
-            data = ContentFile(base64.b64decode(imgstr), name=f'annotated_{patient.name}.{ext}')
+            data = ContentFile(base64.b64decode(imgstr), name=f'annotated_{patient.slug}.{ext}')
 
             latest_image = patient.images.last()
             if latest_image:
                 latest_image.annotated_image.save(data.name, data)
                 latest_image.save()
 
-        return redirect('patient_manager:patient_details', name=patient.name)
+        return redirect('patient_manager:patient_details', name=patient.slug)
 from docx import Document
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 import requests
 from tempfile import NamedTemporaryFile
 from .models import Patient  # Ensure this import matches your app's structure
+from django.utils.text import slugify
 
-def download_patient_details(request, name):
-    patient = get_object_or_404(Patient, name=name)
+def download_patient_details(request, slug):
+    patient = get_object_or_404(Patient, slug=slug)
     procedure = patient.procedures.first()
 
     document = Document()
     document.add_heading('Patient Details', 0)
 
     paragraph = document.add_paragraph()
-    paragraph.add_run(f"Name: {patient.name}")
+    paragraph.add_run(f"Name: {patient.last_name}")
     paragraph.add_run(f"\nAge: {patient.age}")
 
     document.add_heading('Procedures', 1)
@@ -224,14 +225,15 @@ def download_patient_details(request, name):
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     )
-    response['Content-Disposition'] = f'attachment; filename={patient.name}_details.docx'
+    filename = f"{slugify(patient.last_name)}, {slugify(patient.first_name)} {slugify(patient.middle_name)}_details.docx"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     document.save(response)
 
     return response
 
 
 
-def annotate_image(request, name):
-    patient = get_object_or_404(Patient, name=name)
+def annotate_image(request, slug):
+    patient = get_object_or_404(Patient, slug=slug)
     return render(request, 'annotate.html', {'patient': patient})
 

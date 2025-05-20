@@ -2,7 +2,7 @@
 {% block title %}Recent Patients{% endblock %}
 {% block content %}
   <h1>Patient Details</h1>
-  <h1>Upload Photos for {{ patient.name }}</h1>
+  <h1>Upload Photos for {{ patient.first_name }}</h1>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" name="image" multiple>

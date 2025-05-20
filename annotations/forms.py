@@ -5,7 +5,7 @@ from .models import Image
 class PatientForm(forms.ModelForm):
     class Meta:
         model = Patient
-        fields = ['name', 'age', 'sex', 'contact_number']
+        fields = ['first_name', 'middle_name', 'last_name', 'age', 'sex', 'contact_number']
 
 class ProcedureForm(forms.ModelForm):
     class Meta:

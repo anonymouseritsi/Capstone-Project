@@ -6,11 +6,13 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/patients.css' %}">
 <div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
-    <div class="logo">
-
-    </div>
     <!-- side navigation buttons -->
     <nav class="side-panel-icons">
+        <div class="home-icon">
+            <span class="icon-span">
+                <img src="logo" alt="logo" id="icons">
+            </span>
+        </div>
         <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
             <span class="icon-span">
                 <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
@@ -58,7 +60,7 @@
 </header>
 <section class="patient-list">
     {% for x in patient %}
-    <div class="banner" style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' x.name %}';">
+    <div class="banner" style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' x.slug %}';">
         <div class="profile">
             <span class="dot">
 
@@ -66,7 +68,7 @@
         </div>
         <div class="patient-info">
             <div class="patient-name">
-                Name : {{ x.name }}
+                Name : {{ x.first_name }} {{ x.middle_name }} {{ x.last_name }}
             </div>
             <div class="patient-age-sex">
                 <span class="age">

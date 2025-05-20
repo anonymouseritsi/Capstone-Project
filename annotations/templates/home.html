@@ -11,11 +11,13 @@ Home
 <!-- <div class="dark-overlay" id='dark-overlay'></div> -->
 <!-- side panel -->
 <div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
-    <div class="logo">
-
-    </div>
     <!-- side navigation buttons -->
     <nav class="side-panel-icons">
+        <div class="home-icon">
+            <span class="icon-span">
+                <img src="logo" alt="logo" id="icons">
+            </span>
+        </div>
         <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
             <span class="icon-span">
                 <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
@@ -56,7 +58,7 @@ Home
             <span class="add-view-container">
                 <div class="add-patient" onclick="location.href='/add-patient'" style="cursor: pointer;">
                     <span class="add-icon">
-                        
+                        <img class="add-icon" src="{% static 'icons/add.png' %}" alt="">
                     </span>
                     <span class="add-text">
                         Add Patient
@@ -76,22 +78,28 @@ Home
             <div class="recent-span-text">
                 <p id="recentText">Recent Patients</p>
             </div>
-            <table>
-                <tr>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Sex</th>
-                    <th>Contact Number</th>
-                </tr>
-                {% for x in patients %}
-                    <tr style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' x.name %}';">
-                        <td>{{ x.name }}</td>
-                        <td>{{ x.age }}</td>
-                        <td>{{ x.sex }}</td>
-                        <td>{{ x.contact_number }}</td>
-                    </tr>
-                {% endfor %}
-            </table>    
+            <div class="table-container">
+                <table class="patient-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Sex</th>
+                            <th>Entry Added</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for patient in patients %}
+                        <tr style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' patient.slug %}';">
+                            <td>{{ patient.first_name }} {{ patient.middle_name }} {{ patient.last_name }}</td>
+                            <td>{{ patient.age }}</td>
+                            <td>{{ patient.sex }}</td>
+                            <td>{{ patient.created_at|date:"F j, Y, g:i a" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
  </div>
