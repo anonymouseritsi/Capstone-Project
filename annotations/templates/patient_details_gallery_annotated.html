@@ -192,7 +192,7 @@
   {% if patient.images.all %}
     {% for x in patient.images.all %}
     <div class="photos">
-        <img src="{{ x.image.url }}" alt="Image {{ forloop.counter }}" class="cover-image" onclick="openModal(this)">
+        <img src="{{ x.annotated_image.url }}" alt="Image {{ forloop.counter }}" class="cover-image" onclick="openModal(this)">
     </div>
     {% endfor %}
   {% else %}
