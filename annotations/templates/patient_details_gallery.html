@@ -117,7 +117,7 @@
           Name : 
         </span>
         <span>
-          <b>{{ patient.name }}</b>
+          <b>{{ patient.last_name|capfirst }}, {{ patient.first_name|capfirst }} {{ patient.middle_name|capfirst }}</b>
         </span>
       </div>
       <div class="patient-age">
@@ -189,11 +189,15 @@
   <div class="add-photos" onclick="window.location.href='{% url 'patient_manager:upload_image' patient.slug %}'">
 
   </div>
-  {% for x in patient.images.all %}
-  <div class="photos">
-      <img src="{{ x.image.url }}" alt="Image {{ forloop.counter }}" class="cover-image" onclick="openModal(this)">
-  </div>
-  {% endfor %}
+  {% if patient.images.all %}
+    {% for x in patient.images.all %}
+    <div class="photos">
+        <img src="{{ x.image.url }}" alt="Image {{ forloop.counter }}" class="cover-image" onclick="openModal(this)">
+    </div>
+    {% endfor %}
+  {% else %}
+    <p>No images available.</p>
+  {% endif %}
 </section>
 <!-- Image Modal -->
 <div id="imageModal" class="modal" onclick="closeModal()">

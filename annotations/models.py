@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
+from django.urls import reverse
 
 class Patient(models.Model):
     SEX_CHOICES = [
@@ -18,8 +19,13 @@ class Patient(models.Model):
     age = models.PositiveIntegerField()
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
     contact_number = models.CharField(max_length=11)
+    province = models.CharField(max_length=50, default="")
+    city_municipality = models.CharField(max_length=50, default="")
+    baranggay = models.CharField(max_length=50, default="")
+    street = models.CharField(max_length=50, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, blank=True)
+    email = models.EmailField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -27,6 +33,9 @@ class Patient(models.Model):
             base_slug = slugify(f"{self.first_name}-{self.last_name}-{self.id}")
             self.slug = base_slug
             self.save(update_fields=['slug'])
+
+    def get_absolute_url(self):
+        return reverse('patient_manager:add_procedure', kwargs={'slug': self.slug})
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

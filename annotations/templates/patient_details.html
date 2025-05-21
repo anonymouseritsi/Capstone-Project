@@ -117,7 +117,7 @@
           Name : 
         </span>
         <span>
-          <b>{{ patient.name }}</b>
+          <b>{{ patient.last_name|capfirst }}, {{ patient.first_name|capfirst }} {{ patient.middle_name|capfirst }}</b>
         </span>
       </div>
       <div class="patient-age">
@@ -184,10 +184,20 @@
     <button id="navigationButton" onclick=window.location.href="{% url 'patient_manager:patient_details_gallery_annotated' patient.slug %}">Annotated Gallery</button>
   </div>
 </section>
-<!-- GALLERY CONTENT -->
+<!-- DEATILS CONTENT -->
 <section class="gallery-container">
-  <div class="add-photos" onclick="window.location.href='{% url 'patient_manager:upload_image' patient.slug %}'">
-    DETAILS
+  <div class="details-container">
+    <p>Full Name : {{ patient.last_name }}, {{ patient.first_name}} {{ patient.middle_name}}</p>
+    <p>Age : {{ patient.age }}</p>
+    <p>Sex : {{ patient.sex }}</p>
+    <p>Procedure : {{ procedure.get_procedure_type_display|default:"No recorded procedure" }}</p>
+    <p>Province : {{ patient.province }}</p>
+    <p>City/Municipality : {{ patient.city_municipality }}</p>
+    <p>Baranggay : {{ patient.baranggay }}</p>
+    <p>Street : {{ patient.street }}</p>
+    <p>Contact Number : {{ patient.contact_number }}</p>
+    <p>Email : {{ patient.email }}</p>
+    <p>First Checkup Date : {{ patient.created_at }}</p>
   </div>
   <!-- {% for x in patient.images.all %}
     {% if image.annotated_image %}

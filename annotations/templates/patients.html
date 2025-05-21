@@ -68,7 +68,7 @@
         </div>
         <div class="patient-info">
             <div class="patient-name">
-                Name : {{ x.first_name }} {{ x.middle_name }} {{ x.last_name }}
+                Name : {{ x.first_name|capfirst }} {{ x.middle_name|capfirst }} {{ x.last_name|capfirst }}
             </div>
             <div class="patient-age-sex">
                 <span class="age">

@@ -75,19 +75,19 @@ def patient_details_gallery_annotated(request, slug):
     }
     return render(request, 'patient_details_gallery_annotated.html', context)
 
-def edit_patient(request, name):
-    patient = get_object_or_404(Patient, name=name)
+def edit_patient(request, slug):
+    patient = get_object_or_404(Patient, slug=slug)
     if request.method == 'POST':
         form = PatientForm(request.POST, instance=patient)
         if form.is_valid():
             form.save()
-            return redirect('patient_manager:patient_details', name=patient.name)
+            return redirect('patient_manager:patient_details', slug=patient.slug)
     else:
         form = PatientForm(instance=patient)
     return render(request, 'edit_patient.html', {'form': form})
 
-def delete_patient(request, name):
-    patient = get_object_or_404(Patient, name=name)
+def delete_patient(request, slug):
+    patient = get_object_or_404(Patient, slug=slug)
     if request.method == 'POST':
         patient.delete()
         return redirect('patient_manager:patients')
@@ -108,22 +108,28 @@ def add_patient(request):
     if request.method == 'POST':
         form = PatientForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('patient_manager:add_procedure')
+            patient = form.save()
+            return redirect(patient.get_absolute_url())
     else:
+        print("not valid")
         form = PatientForm()
     return render(request, 'add_patient.html', {'form': form})
 
-def add_procedure(request):
-
+def add_procedure(request, slug):
+    patient = get_object_or_404(Patient, slug=slug)
     if request.method == 'POST':
         form = ProcedureForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('patient_manager:home')
+            # Create a new procedure instance and assign it to the patient
+            procedure = form.save(commit=False)
+            procedure.patient = patient
+            procedure.save()
+            return redirect('patient_manager:patient_details', slug=patient.slug)
     else:
+        print("form not valid")
         form = ProcedureForm()
-    return render(request, 'add_procedure.html', {'form': form})
+    
+    return render(request, 'add_procedure.html', {'form': form, 'patient': patient})
 
 
 def recent_patients(request):
@@ -159,7 +165,7 @@ def save_annotation(request, slug):
                 latest_image.annotated_image.save(data.name, data)
                 latest_image.save()
 
-        return redirect('patient_manager:patient_details', name=patient.slug)
+        return redirect('patient_manager:patient_details', slug=patient.slug)
 from docx import Document
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404

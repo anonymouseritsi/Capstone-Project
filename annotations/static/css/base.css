@@ -15,4 +15,5 @@ body {
   margin: 0; /* removes any default margins */
   padding: 0; /* removes any default padding */
   font-family: 'Lexend', sans-serif; /* sets the font family to Lexend */
+  font-weight: 300;
 }

@@ -263,9 +263,9 @@ div.navigation-buttons-parent {
 section.gallery-container {
   margin-left: 12%;
   margin-top: 1%;
-  height: 50vh;
+  height: 63vh;
   width: auto;
-  background-color: lightgray;
+  /* background-color: lightgray; */
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -334,4 +334,11 @@ img.cover-image {
   font-size: 40px;
   font-weight: bold;
   cursor: pointer;
+}
+
+/* DETAILS CSS */
+div.details-container {
+  height: 100%;
+  width: 60vh;
+  /* background-color: yellow; */
 }

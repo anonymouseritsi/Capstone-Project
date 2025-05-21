@@ -3,7 +3,7 @@
 {% block content %}
 
 
-<h2 class="text-2xl font-bold mb-4">Add Ultrasound Procedure</h2>
+<h2 class="text-2xl font-bold mb-4">Add Ultrasound Procedure for {{ patient.first_name|capfirst }} {{ patient.last_name|capfirst }}</h2>
 <form method="post" class="space-y-4">
     {% csrf_token %}
     {{ form.as_p }}
