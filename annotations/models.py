@@ -21,12 +21,12 @@ class Patient(models.Model):
     contact_number = models.CharField(max_length=11)
     province = models.CharField(max_length=50, default="")
     city_municipality = models.CharField(max_length=50, default="")
-    baranggay = models.CharField(max_length=50, default="")
+    baranggay = models.CharField(max_length=50, default="") 
     street = models.CharField(max_length=50, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, blank=True)
     email = models.EmailField(unique=True, blank=True)
-
+    procedure = models.CharField(max_length=50, blank=True)
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if not self.slug:
@@ -44,24 +44,7 @@ class Patient(models.Model):
     def total_procedure_cost(self):
         return sum(procedure.get_price() for procedure in self.procedures.all())
 
-# class Procedure(models.Model):
-#     PROCEDURE_CHOICES = [
-#         ('abdominal', 'Abdominal'),
-#         ('pelvic', 'Pelvic'),
-#         ('obstetric', 'Obstetric'),
-#         ('thyroid', 'Thyroid'),
-#         ('breast', 'Breast'),
-#     ]
 
-#     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='procedures', null=True)
-#     procedure_type = models.CharField(max_length=20, choices=PROCEDURE_CHOICES) 
-#     notes = models.TextField(blank=True, null=True)
-#     date = models.DateField(auto_now_add=True)
-
-#     def __str__(self):
-#         return f"{self.procedure_type} - {self.patient.name}"
-
-#procedure cost
 class Procedure(models.Model):
     PROCEDURE_CHOICES = [
         ('abdominal', 'Abdominal'),

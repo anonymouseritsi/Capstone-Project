@@ -1,11 +1,14 @@
 from rest_framework import viewsets
-from .models import Image, Annotation
+from .models import Image, Annotation, Procedure
 from .serializers import ImageSerializer, AnnotationSerializer
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PatientForm, ProcedureForm
 from .models import *
 from .forms import ImageUploadForm
 import base64
+from django.db.models.functions import TruncDate
+from django.db.models import Count
+
 from django.core.files.base import ContentFile
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -92,6 +95,80 @@ def delete_patient(request, slug):
         patient.delete()
         return redirect('patient_manager:patients')
     return render(request, 'delete_patient.html', {'patient': patient})
+
+from django.db.models import Count
+from django.db.models.functions import TruncDate
+from .models import Procedure
+
+def analytics_dashboard(request):
+    # 1) Procedure Type Distribution (Doughnut)
+    proc_dist_qs = (
+        Procedure.objects
+        .values('procedure_type')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+    PROCEDURE_LABELS = dict(Procedure.PROCEDURE_CHOICES)
+    proc_dist_labels = [PROCEDURE_LABELS.get(entry['procedure_type'], entry['procedure_type']) for entry in proc_dist_qs]
+    proc_dist_counts = [entry['count'] for entry in proc_dist_qs]
+
+    # 2) Procedures Over Time (Line chart)
+    qs = (
+        Procedure.objects
+        .extra({'date_only': "date(date)"})
+        .values('date_only', 'procedure_type')
+        .annotate(count=Count('id'))
+        .order_by('date_only')
+    )
+    types = [choice[0] for choice in Procedure.PROCEDURE_CHOICES]
+
+    data_by_type = {ptype: {} for ptype in types}
+    dates_set = set()
+
+    for entry in qs:
+        ptype = entry['procedure_type']
+        date = entry['date_only']
+        count = entry['count']
+        data_by_type[ptype][date] = count
+        dates_set.add(date)
+
+    sorted_dates = sorted(dates_set)
+    proc_time_datasets = []
+    colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+
+    for i, ptype in enumerate(types):
+        counts = [data_by_type[ptype].get(date, 0) for date in sorted_dates]
+        proc_time_datasets.append({
+            'label': PROCEDURE_LABELS.get(ptype, ptype),
+            'data': counts,
+            'borderColor': colors[i],
+            'fill': False,
+            'tension': 0.2,
+        })
+    data = Patient.objects.values('province').annotate(count=Count('id')).order_by('province')
+    labels = [item['province'] for item in data]
+    counts = [item['count'] for item in data]
+
+
+    context = {
+        # Doughnut
+        'proc_dist_labels': proc_dist_labels,
+        'proc_dist_counts': proc_dist_counts,
+
+        # Line chart
+        'proc_time_labels': sorted_dates,
+        'proc_time_datasets': proc_time_datasets,
+
+        'labels': labels,  # JSON string
+        'counts': counts,
+    }
+
+    
+    
+         
+
+    return render(request, 'analytics_dashboard.html', context)
+
 
 def billing_view(request):
     return render(request, 'billing.html')
