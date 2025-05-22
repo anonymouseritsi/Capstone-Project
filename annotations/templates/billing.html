@@ -1,8 +1,32 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}Patients - Doctor Dashboard{% endblock %}
+{% block title %}
+Billing
+{% endblock %}
 
 {% block content %}
-    <h1 class="text-2xl font-bold mb-4">Patient List</h1>
-    <p>This is the Billing page.</p>
+<link rel="stylesheet" href="{% static 'css/billing.css' %}">
+<div class="billing-container">
+  <h2>Ultrasound Billing</h2>
+  <table>
+    <tr>
+      <th>Patient Name</th>
+      <th>Procedure</th>
+      <th>Cost</th>
+      <th>Insurance Coverage</th>
+      <th>Balance Due</th>
+    </tr>
+    <tr>
+      <td>{{ patient_name }}</td>
+      <td>Ultrasound ({{ procedure_type }})</td>
+      <td>₱{{ cost }}</td>
+      <td>₱{{ insurance_coverage }}</td>
+      <td>₱{{ balance_due }}</td>
+    </tr>
+  </table>
+  <p class="notes">Notes: {{ notes }}</p>
+  <p class="status">Status: {{ status }}</p>
+</div>
 {% endblock %}
+
