@@ -168,7 +168,8 @@ def analytics_dashboard(request):
 
 
 def billing_view(request):
-    return render(request, 'billing.html')
+    patients = Patient.objects.all().order_by('last_name')
+    return render(request, 'billing.html', {'patients': patients})
 
 def reports_view(request):
     return render(request, 'reports.html')
@@ -322,8 +323,6 @@ def download_patient_details(request, slug):
     return response
 
 
-
 def annotate_image(request, slug):
     patient = get_object_or_404(Patient, slug=slug)
     return render(request, 'annotate.html', {'patient': patient})
-
