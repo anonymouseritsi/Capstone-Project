@@ -1,8 +1,8 @@
 /* ========== SIDE PANEL ========== */
 div.side-panel {
-    height: 100%;
+    height: 100vh;
     width: 5%;
-    background-color: #E9DCC9;
+    background-color: #F4EFE7;
     position: fixed;
     top: 0;
     left: 0;
@@ -11,18 +11,18 @@ div.side-panel {
     justify-content: space-between;
     align-items: center;
     z-index: 10;
-    box-shadow: 0px 2px 10px rgb(0, 0, 0, 0.5);
-    transition: all 0.6s ease-in-out;
-}
-
-div.side-panel:hover {
-    background-color: rgb(234, 227, 214);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 div.side-panel > div.logout {
     height: 10%;
     width: 100%;
-    background-color: red;
+    background-color: #FF6B6B;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
 div.side-panel > div.logo {
@@ -37,32 +37,34 @@ div.side-panel > div.logo {
 nav.side-panel-icons {
     display: flex;
     flex-direction: column;
-    justify-content: left;
     align-items: center;
-    height: 30%;
+    height: 50%;
     width: 100%;
-    gap: 5%;
+    gap: 2vh;
 }
 
 div.home-icon {
     width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    transition: all 0.3s ease-in-out;
+    transition: background-color 0.3s ease;
+    padding: 1vh;
+    cursor: pointer;
 }
 
 div.home-icon:hover {
-    box-shadow: 0px 1px 5px gray;
+    background-color: #E0DBD3;
 }
 
 span.icon-span {
-    margin-left: 2vh;
+    margin-left: 1vh;
+    display: flex;
+    align-items: center;
 }
 
 span.icon-span img#icons {
-    height: 5vh;
-    width: 5vh;
+    height: 4vh;
+    width: 4vh;
 }
 
 p#iconText1,
@@ -70,32 +72,23 @@ p#iconText2,
 p#iconText3,
 p#iconText4 {
     opacity: 0;
-    transition: opacity 0.3s ease-in;
-    transition-delay: 0.5s;
+    transition: opacity 0.3s ease-in 0.3s;
     font-family: 'Lexend', sans-serif;
-    font-weight: 200;
-    font-size: 1.5rem;
-    margin-left: 3vh;
-    margin-right: 2vh;
-}
-
-/* ========== MAIN CONTAINER ========== */
-.main-container {
-    margin-left: 6%;
-    padding: 20px;
+    font-weight: 300;
+    font-size: 1.3rem;
+    margin-left: 1vh;
 }
 
 /* ========== HEADER SECTION ========== */
 header.header-section {
     height: 10vh;
+    margin-left: 6%;
     padding: 1vh 2vh;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: cornsilk;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-    margin-bottom: 20px;
 }
 
 header.header-section > p#headerText {
