@@ -64,19 +64,27 @@
     </p>
     <span class="search-span">
         <div class="sort-button">
-            
+            <select id="sortSelect" onchange="sortPatients(this.value)">
+                <option value="name">Sort by Name</option>
+                <option value="date">Sort by Date</option>
+                <option value="age">Sort by Age</option>
+            </select>
         </div>
         <div class="search-container">
-
+            <input type="text" id="searchInput" placeholder="Search patients..." onkeyup="searchPatients()">
+            <img src="{% static 'icons/search.png' %}" alt="search" class="search-icon">
         </div>
     </span>
 </header>
-<section class="patient-list">
+<section class="patient-list" id="patientList">
     {% for x in patient %}
-    <div class="banner" style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' x.slug %}';">
+    <div class="banner patient-card" style="cursor: pointer;" 
+         onclick="window.location.href='{% url 'patient_manager:patient_details' x.slug %}';"
+         data-name="{{ x.first_name|lower }} {{ x.middle_name|lower }} {{ x.last_name|lower }}"
+         data-age="{{ x.age }}"
+         data-date="{{ x.created_at|date:'Y-m-d' }}">
         <div class="profile">
             <span class="dot">
-
             </span>
         </div>
         <div class="patient-info">
@@ -163,5 +171,45 @@ function sortPatients(criteria) {
     </div>
     {% endfor %}
 </section>
+<<<<<<< HEAD
 >>>>>>> parent of f0473c9 (added API, sort patients, and search patients)
+=======
+
+<script>
+function searchPatients() {
+    const searchInput = document.getElementById('searchInput');
+    const filter = searchInput.value.toLowerCase();
+    const patientCards = document.getElementsByClassName('patient-card');
+
+    for (let card of patientCards) {
+        const name = card.getAttribute('data-name');
+        if (name.includes(filter)) {
+            card.style.display = "";
+        } else {
+            card.style.display = "none";
+        }
+    }
+}
+
+function sortPatients(criteria) {
+    const patientList = document.getElementById('patientList');
+    const patientCards = Array.from(document.getElementsByClassName('patient-card'));
+
+    patientCards.sort((a, b) => {
+        switch(criteria) {
+            case 'name':
+                return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+            case 'date':
+                return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
+            case 'age':
+                return parseInt(a.getAttribute('data-age')) - parseInt(b.getAttribute('data-age'));
+            default:
+                return 0;
+        }
+    });
+
+    patientCards.forEach(card => patientList.appendChild(card));
+}
+</script>
+>>>>>>> f0473c9 (added API, sort patients, and search patients)
 {% endblock %}
