@@ -286,11 +286,28 @@ section.gallery-container {
     background-position: center;
     cursor: pointer;
     transition: all 0.5s ease-in-out;
+    position: relative;
+    overflow: hidden;
   }
 }
 
-div.photos:hover {
-  transform: scale(1.05);
+div.photos .upload-date {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px;
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+div.photos:hover .upload-date {
+    transform: translateY(0);
 }
 
 img.cover-image {
@@ -340,4 +357,40 @@ div.details-container {
   height: 100%;
   width: 60vh;
   /* background-color: yellow; */
+}
+
+/* Modal Styles */
+.modal-content-wrapper {
+    position: relative;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 80%;
+    max-height: 90vh;
+}
+
+.modal-date {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-family: 'Lexend', sans-serif;
+}
+
+.modal-content {
+    max-height: 80vh;
+    width: auto;
+    margin-bottom: 10px;
+}
+
+.close {
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    color: #fff;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
 }
