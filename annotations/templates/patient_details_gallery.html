@@ -132,7 +132,12 @@
   {% if patient.images.all %}
     {% for x in patient.images.all %}
     <div class="photos">
-        <img src="{{ x.image.url }}" alt="Image {{ forloop.counter }}" class="cover-image" onclick="openModal(this)">
+        <img src="{{ x.image.url }}" alt="Image {{ forloop.counter }}" class="cover-image" 
+             onclick="openModal(this, '{{ x.uploaded_at|date:'F j, Y, g:i a' }}')"
+             data-date="{{ x.uploaded_at|date:'F j, Y, g:i a' }}">
+        <div class="upload-date">
+            {{ x.uploaded_at|date:'F j, Y, g:i a' }}
+        </div>
     </div>
     {% endfor %}
   {% else %}
@@ -141,22 +146,36 @@
 </section>
 <!-- Image Modal -->
 <div id="imageModal" class="modal" onclick="closeModal()">
-  <span class="close">&times;</span>
-  <img class="modal-content" id="modalImage">
+  <div class="modal-content-wrapper">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div class="modal-date" id="modalDate"></div>
+  </div>
 </div>
 
 <script>
-function openModal(imgElement) {
+function openModal(imgElement, date) {
   var modal = document.getElementById("imageModal");
   var modalImg = document.getElementById("modalImage");
+  var modalDate = document.getElementById("modalDate");
 
   modal.style.display = "block";
   modalImg.src = imgElement.src;
+  modalDate.textContent = "Uploaded on: " + date;
 }
 
 function closeModal() {
   var modal = document.getElementById("imageModal");
-  modal.style.display = "none";
+  if (event.target === modal || event.target.className === 'close') {
+    modal.style.display = "none";
+  }
 }
+
+// Close modal with escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === "Escape") {
+    closeModal();
+  }
+});
 </script>
 {% endblock %}
