@@ -8,6 +8,7 @@ from .forms import ImageUploadForm
 import base64
 from django.db.models.functions import TruncDate
 from django.db.models import Count
+import json
 
 from django.core.files.base import ContentFile
 
@@ -21,16 +22,8 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 
 def home(request):
     patients = Patient.objects.all().order_by('-created_at')
-    
-    # Get province distribution data
-    province_data = Patient.objects.values('province').annotate(count=Count('id')).order_by('province')
-    labels = [item['province'] for item in province_data]
-    counts = [item['count'] for item in province_data]
-    
     context = {
         'patients': patients,
-        'labels': labels,
-        'counts': counts
     }
     return render(request,'home.html', context)
 
@@ -153,28 +146,24 @@ def analytics_dashboard(request):
             'fill': False,
             'tension': 0.2,
         })
-    data = Patient.objects.values('province').annotate(count=Count('id')).order_by('province')
-    labels = [item['province'] for item in data]
-    counts = [item['count'] for item in data]
 
-
+    # Get province distribution data for the new Plotly chart
+    province_data = Patient.objects.values('province').annotate(count=Count('id')).order_by('province')
+    labels = [item['province'] for item in province_data]
+    counts = [item['count'] for item in province_data]
+    
+    # Convert data to JSON for template
     context = {
-        # Doughnut
+        'labels': json.dumps(labels),
+        'counts': json.dumps(counts),
+        
+        # Keep the old context data for reference
         'proc_dist_labels': proc_dist_labels,
         'proc_dist_counts': proc_dist_counts,
-
-        # Line chart
         'proc_time_labels': sorted_dates,
         'proc_time_datasets': proc_time_datasets,
-
-        'labels': labels,  # JSON string
-        'counts': counts,
     }
-
     
-    
-         
-
     return render(request, 'analytics_dashboard.html', context)
 
 
@@ -193,11 +182,21 @@ def logout_view(request):
 def add_patient(request):
     if request.method == 'POST':
         form = PatientForm(request.POST)
+        print("Form data:", request.POST)  # Debug print
         if form.is_valid():
-            patient = form.save()
-            return redirect(patient.get_absolute_url())
+            print("Form is valid")  # Debug print
+            try:
+                patient = form.save()
+                print(f"Patient saved with slug: {patient.slug}")  # Debug print
+                redirect_url = patient.get_absolute_url()
+                print(f"Redirecting to: {redirect_url}")  # Debug print
+                return redirect(redirect_url)
+            except Exception as e:
+                print(f"Error saving patient: {str(e)}")  # Debug print
+                form.add_error(None, f"Error saving patient: {str(e)}")
+        else:
+            print("Form errors:", form.errors)  # Debug print
     else:
-        print("not valid")
         form = PatientForm()
     return render(request, 'add_patient.html', {'form': form})
 
