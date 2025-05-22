@@ -1,0 +1,163 @@
+.procedure-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.procedure-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.procedure-header h2 {
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.patient-info {
+    background: #f3f4f6;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.patient-info p {
+    margin: 0.5rem 0;
+    color: #4b5563;
+}
+
+.patient-name {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: white;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.procedure-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.procedure-option {
+    position: relative;
+    padding: 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.procedure-option:hover {
+    border-color: #3b82f6;
+    background-color: #f8fafc;
+}
+
+.procedure-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.procedure-option label {
+    display: block;
+    cursor: pointer;
+    font-weight: 500;
+    color: #374151;
+}
+
+.procedure-option input[type="radio"]:checked + label {
+    color: #3b82f6;
+}
+
+.procedure-option.selected {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+}
+
+.notes-field {
+    margin-top: 1.5rem;
+}
+
+.notes-field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.submit-button:hover {
+    background-color: #2563eb;
+}
+
+.submit-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Medical-themed icons and decorations */
+.medical-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 0.75rem;
+    color: #3b82f6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .procedure-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    .procedure-options {
+        grid-template-columns: 1fr;
+    }
+} 

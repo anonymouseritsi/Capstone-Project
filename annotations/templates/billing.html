@@ -64,11 +64,16 @@ Billing
         <tr>
         <th>Procedure</th>
         <td>
-            {% for choice in PROCEDURE_CHOICES %}
-            <input type="checkbox" id="procedure-{{ choice.0 }}" name="procedure" value="{{ choice.0 }}" {% if patient.procedure == choice.0 %}checked{% endif %}>
-            <label for="procedure-{{ choice.0 }}">{{ choice.1 }}</label>
-            <br>
-            {% endfor %}
+            <input type="checkbox" id="procedure-abdominal" name="procedure" value="abdominal">
+            <label for="procedure-abdominal">Abdominal</label><br>
+            <input type="checkbox" id="procedure-pelvic" name="procedure" value="pelvic">
+            <label for="procedure-pelvic">Pelvic</label><br>
+            <input type="checkbox" id="procedure-obstetric" name="procedure" value="obstetric">
+            <label for="procedure-obstetric">Obstetric</label><br>
+            <input type="checkbox" id="procedure-thyroid" name="procedure" value="thyroid">
+            <label for="procedure-thyroid">Thyroid</label><br>
+            <input type="checkbox" id="procedure-breast" name="procedure" value="breast">
+            <label for="procedure-breast">Breast</label><br>
         </td>
         </tr>
         <tr>
