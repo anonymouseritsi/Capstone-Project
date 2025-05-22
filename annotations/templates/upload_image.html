@@ -1,35 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}Recent Patients{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">Recent Patients</h2>
-
-<table class="table-auto w-full border-collapse">
-    <thead class="bg-gray-200">
-        <tr>
-            <th class="border px-4 py-2">Name</th>
-            <!-- <th class="border px-4 py-2">Age</th>
-            <th class="border px-4 py-2">Sex</th>
-            <th class="border px-4 py-2">Contact Number</th> -->
-        </tr>
-    </thead>
-    <tbody>
-        {% for patient in patients %}
-        <tr>
-            <!-- <td class="border px-4 py-2">{{ patient.name }}</td>
-            <td class="border px-4 py-2">{{ patient.age }}</td>
-            <td class="border px-4 py-2">{{ patient.get_sex_display }}</td>
-            <td class="border px-4 py-2">{{ patient.contact_number }}</td> -->
-            <td class="border px-4 py-2">
-                <a href="{% url 'upload_image' patient.id %}" class="text-blue-600 hover:underline">
-                    {{ patient.name }}
-                </a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4" class="text-center py-4">No patients found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+  <h1>Patient Details</h1>
+  <h1>Upload Photos for {{ patient.first_name }}</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="image" multiple>
+    <button type="submit" class="btn btn-primary">Upload Photos</button>
+  </form>
 {% endblock %}

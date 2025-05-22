@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Patients Details - Doctor Dashboard{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/patient_details.css' %}">
+<div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
+    <!-- side navigation buttons -->
+    <nav class="side-panel-icons">
+        <div class="home-icon">
+          <span class="icon-span">
+              <img src="logo" alt="logo" id="icons">
+          </span>
+        </div>
+        <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText1">Home</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/patients';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/patient.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText2">Patients</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/billing';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/billing.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText3">Billing</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/analytics';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/analytics.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText4">Analytics</p>
+        </div>
+    </nav>
+    <!-- logout button -->
+    <div class="logout">
+
+    </div>
+</div>
+
+<!-- BODY HTML -->
+
+<!-- <div class="patient-details">
+  <h1>{{ patient.name }}'s Details</h1>
+
+  <div class="patient-info">
+    <h3>Basic Info</h3>
+    <ul>
+      <li><span>Age:</span> {{ patient.age }}</li>
+    </ul>
+  </div>
+
+<h2>Procedures</h2>
+<ul>
+  <li>
+      Procedure: {{ procedure.procedure_type|default:"No recorded procedure" }}
+    </li>
+    <li>
+      Date: {% if procedure.date %}{{ procedure.date }}{% else %}No recorded date{% endif %}
+    </li>
+    <li>
+      Notes: {{ procedure.notes|default:"No recorded notes" }}
+    </li>
+    <hr>
+</ul>
+  <p>Images:</p>
+  <ul>
+    {% for image in patient.images.all %}
+      <li>
+        <img src="{{ image.image.url }}" alt="Image {{ forloop.counter }}">
+      </li>
+    {% empty %}
+      <li>No images uploaded.</li>
+    {% endfor %}
+  </ul>
+
+<p>Annotated Images:</p>
+<ul>
+  {% for image in patient.images.all %}
+    {% if image.annotated_image %}
+      <li>
+        <img src="{{ image.annotated_image.url }}" alt="Annotated Image {{ forloop.counter }}">
+      </li>
+    {% endif %}
+  {% empty %}
+    <li>No annotated images available.</li>
+  {% endfor %}
+</ul>
+
+<p>
+  <p><strong>Total Bill:</strong> {{ total_cost }} pesos</p> 
+  <a href="{% url 'patient_manager:upload_image' patient.slug %}">Upload Photos</a>
+  <a href="{% url 'patient_manager:download_patient_details' patient.slug %}">Download Details</a>
+</p>
+
+  <br>
+  <a href="{% url 'patient_manager:edit_patient' patient.slug %}">Edit Patient Information</a>
+  <br>
+  <a href="{% url 'patient_manager:delete_patient' patient.slug %}">Delete Patient Record</a>
+
+</div> -->
+
+<header class="patient-details-container">
+  <section class="patient-details">
+    <span class="patient-pic">
+
+    </span>
+    <span class="patient-information">
+      <div class="patient-name">
+        <span>
+          Name : 
+        </span>
+        <span>
+          <b>{{ patient.last_name|capfirst }}, {{ patient.first_name|capfirst }} {{ patient.middle_name|capfirst }}</b>
+        </span>
+      </div>
+      <div class="patient-age">
+        <span>
+          Age : 
+        </span>
+        <span>
+          <b>{{ patient.age }}</b>
+        </span>
+      </div>
+      <div class="patient-sex">
+        <span>
+          Sex : 
+        </span>
+        <span>
+          <b>{{ patient.sex }}</b>
+        </span>
+      </div>
+    </span>
+  </section>
+  <section class="patient-procedures">
+    <div class="dropdown-procedures" id="proceduresDropdown">
+      <button class="dropdown-toggle">Procedure : {{ procedure.get_procedure_type_display|default:"No recorded procedure" }}</button>
+      <div class="dropdown-menu">
+        {% for choice in Procedure.PROCEDURE_CHOICES %}
+          <a href="#" class="dropdown-item">{{ choice.1 }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- JS FOR THE DROPDOWN -->
+<script>
+  const dropdown = document.getElementById('proceduresDropdown');
+  const toggle = dropdown.querySelector('.dropdown-toggle');
+
+  toggle.addEventListener('click', function () {
+    dropdown.classList.toggle('open');
+  });
+
+  // Close dropdown if clicked outside
+  window.addEventListener('click', function (e) {
+    if (!dropdown.contains(e.target)) {
+      dropdown.classList.remove('open');
+    }
+  });
+</script>
+  </section>
+  <section class="patient-actions">
+    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:download_patient_details' patient.slug %}'">
+      Download Details
+    </div>
+    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:edit_patient' patient.slug %}'">
+      Edit Patient Information
+    </div>
+    <div class="action-button" onclick="window.location.href='{% url 'patient_manager:delete_patient' patient.slug %}'">
+      Delete Patient Record
+    </div>
+  </section>
+</header>
+<!-- NAVIGATION FOLDER BUTTONS -->
+<section class="navigation-buttons-container">
+  <div class="navigation-buttons-parent">
+    <button id="navigationButton" onclick=window.location.href="{% url 'patient_manager:patient_details' patient.slug %}">Patient Details</button>
+    <button id="navigationButton" onclick=window.location.href="{% url 'patient_manager:patient_details_gallery' patient.slug %}">Gallery</button>
+    <button id="navigationButton" onclick=window.location.href="{% url 'patient_manager:patient_details_gallery_annotated' patient.slug %}">Annotated Gallery</button>
+  </div>
+</section>
+<!-- GALLERY CONTENT -->
+<section class="gallery-container">
+  <div class="add-photos" onclick="window.location.href='{% url 'patient_manager:upload_image' patient.slug %}'">
+
+  </div>
+  {% if patient.images.all %}
+    {% for x in patient.images.all %}
+    <div class="photos">
+        <img src="{{ x.annotated_image.url }}" alt="Image {{ forloop.counter }}" class="cover-image" 
+             onclick="openModal(this, '{{ x.uploaded_at|date:'F j, Y, g:i a' }}')"
+             data-date="{{ x.uploaded_at|date:'F j, Y, g:i a' }}">
+        <div class="upload-date">
+            {{ x.uploaded_at|date:'F j, Y, g:i a' }}
+        </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <p>No images available.</p>
+  {% endif %}
+</section>
+<div id="imageModal" class="modal" onclick="closeModal()">
+  <div class="modal-content-wrapper">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div class="modal-date" id="modalDate"></div>
+  </div>
+</div>
+
+<script>
+function openModal(imgElement, date) {
+  var modal = document.getElementById("imageModal");
+  var modalImg = document.getElementById("modalImage");
+  var modalDate = document.getElementById("modalDate");
+
+  modal.style.display = "block";
+  modalImg.src = imgElement.src;
+  modalDate.textContent = "Uploaded on: " + date;
+}
+
+function closeModal() {
+  var modal = document.getElementById("imageModal");
+  if (event.target === modal || event.target.className === 'close') {
+    modal.style.display = "none";
+  }
+}
+
+// Close modal with escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === "Escape") {
+    closeModal();
+  }
+});
+</script>
+{% endblock %}

@@ -22,6 +22,7 @@
   </div>
 
   <script>
+
     let canvas = new fabric.Canvas('canvas');
     let undoStack = [];
     let currentMode = null; // Current annotation mode (length or width)
@@ -173,36 +174,30 @@
 
     // Save the annotations
     function saveAnnotations() {
-      let annotations = [];
-      let imageId = 1; // Use real ID if needed
-
-      canvas.getObjects().forEach(obj => {
-        if (obj.type === 'line') {
-          let length = Math.sqrt(Math.pow(obj.x2 - obj.x1, 2) + Math.pow(obj.y2 - obj.y1, 2));
-          annotations.push({
-            image: imageId,
-            x1: obj.x1,
-            y1: obj.y1,
-            x2: obj.x2,
-            y2: obj.y2,
-            label: currentMode === 'length' ? `Length: ${length.toFixed(2)} px` : `Width: ${Math.abs(obj.x2 - obj.x1).toFixed(2)} px`
-          });
-        }
+      window.alert("Annotation saved!")
+      const imageData = canvas.toDataURL({
+        format: 'jpeg',
+        quality: 0.8
       });
 
-      if (annotations.length > 0) {
-        fetch('/api/annotations/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(annotations[0]) // Send the first annotation only
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log("Saved:", data);
-          alert("Annotation saved!");
-        });
-      }
+      const formData = new FormData();
+      formData.append('imageData', imageData);
+
+      fetch("{% url 'patient_manager:save_annotation' patient.slug %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: formData
+      })
+      .then(response => {
+        if (response.redirected) {
+          window.location.href = response.url;
+        }
+      })
+      .catch(error => console.error("Error saving annotation:", error));
     }
+
+
+    
   </script>
-</body>
-</html>

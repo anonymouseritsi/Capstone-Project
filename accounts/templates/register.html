@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+<!-- parent container -->
+<div class="register-parent">
+    <!-- left div -->
+    <div class="welcome-container">
+        <p class="welcome-text">Welcome to <strong>*name*</strong></p>
+        <p class="sub-text">Already have an account?</p>
+        <button id="sign-in-button" onclick="toLogin()">SIGN IN</button>
+    </div>
+
+    <!-- right div -->
+    <div class="register-container">
+        <span class="register-span">
+            <p class="register">Register</p>
+        </span>
+        <span class="flex-form">
+            <!-- lagay nyo nalang kapag nag declare na kayo ng username at password dun sa # -->
+            <form action="#" method="#" id="login-form">
+                <span>
+                    <label for="username-input" id="username-label">USERNAME</label>
+                </span>
+                <input type="text" id="username-input" required>
+                <br>
+                <span>
+                    <label for="password-input" id="password-label">PASSWORD</label>
+                </span>
+                <input type="password" id="password-input" required>
+                <br>
+                <span>
+                    <label for="password-input" id="password-label">CONFIRM PASSWORD</label>
+                </span>
+                <input type="password" id="password-input" required>
+                <br>
+                <br>
+                <input type="submit" value="CREATE AN ACCOUNT" id="sign-up-button">
+            </form>
+        </span>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    function toLogin(){
+        document.location.href = "{% url 'login' %}"
+    }
+</script>
+{% endblock %}

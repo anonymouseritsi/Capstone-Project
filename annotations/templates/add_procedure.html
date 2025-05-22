@@ -1,12 +1,94 @@
 {% extends 'base.html' %}
-{% block title %}Add Patient{% endblock %}
+{% load static %}
+
+{% block title %}Add Ultrasound Procedure - {{ patient.first_name|capfirst }} {{ patient.last_name|capfirst }}{% endblock %}
+
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/add_procedure.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
+<div class="procedure-container">
+    <div class="procedure-header">
+        <i class="fas fa-notes-medical medical-icon"></i>
+        <h2>Add Ultrasound Procedure</h2>
+    </div>
 
-<h2 class="text-2xl font-bold mb-4">Add Ultrasound Procedure</h2>
-<form method="post" class="space-y-4">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Save Procedure</button>
-</form>
+    <div class="patient-info">
+        <p><i class="fas fa-user-circle"></i> <span class="patient-name">{{ patient.first_name|capfirst }} {{ patient.last_name|capfirst }}</span></p>
+        <p><i class="fas fa-calendar-alt"></i> Date: {% now "F j, Y" %}</p>
+        <p><i class="fas fa-venus-mars"></i> Sex: {{ patient.sex }}</p>
+        <p><i class="fas fa-birthday-cake"></i> Age: {{ patient.age }}</p>
+    </div>
+
+    <form method="post" class="procedure-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label><i class="fas fa-list-ul"></i> Select Procedure Type</label>
+            <div class="procedure-options">
+                {% for value, label in form.procedure_type.field.choices %}
+                <div class="procedure-option">
+                    <input type="radio" name="procedure_type" id="procedure_{{ value }}" value="{{ value }}" 
+                           {% if form.procedure_type.value == value %}checked{% endif %}>
+                    <label for="procedure_{{ value }}">
+                        {% if value == 'abdominal' %}
+                            <i class="fas fa-stomach"></i>
+                        {% elif value == 'pelvic' %}
+                            <i class="fas fa-venus"></i>
+                        {% elif value == 'obstetric' %}
+                            <i class="fas fa-baby"></i>
+                        {% elif value == 'thyroid' %}
+                            <i class="fas fa-lungs"></i>
+                        {% elif value == 'breast' %}
+                            <i class="fas fa-ribbon"></i>
+                        {% endif %}
+                        {{ label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            {% if form.procedure_type.errors %}
+            <div class="error-message">
+                {{ form.procedure_type.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group notes-field">
+            <label for="{{ form.notes.id_for_label }}">
+                <i class="fas fa-clipboard-list"></i> Clinical Notes
+            </label>
+            {{ form.notes }}
+            {% if form.notes.errors %}
+            <div class="error-message">
+                {{ form.notes.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="submit-button">
+            <i class="fas fa-save"></i>
+            Save Procedure
+        </button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add selected class to procedure option when selected
+    const procedureOptions = document.querySelectorAll('.procedure-option');
+    procedureOptions.forEach(option => {
+        const radio = option.querySelector('input[type="radio"]');
+        if (radio.checked) {
+            option.classList.add('selected');
+        }
+        
+        option.addEventListener('click', function() {
+            procedureOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            this.querySelector('input[type="radio"]').checked = true;
+        });
+    });
+});
+</script>
 {% endblock %}  

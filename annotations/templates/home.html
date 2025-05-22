@@ -7,16 +7,19 @@ Home
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
-<!-- dark overlay for the side panel -->
-<div class="dark-overlay" id='dark-overlay'></div>
-<!-- side panel -->
-<div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
-    <div class="logo">
 
-    </div>
+<!-- dark overlay for the side panel -->
+<!-- <div class="dark-overlay" id='dark-overlay'></div> -->
+<!-- side panel -->
+<div class="side-panel">
     <!-- side navigation buttons -->
     <nav class="side-panel-icons">
-        <div class="home-icon" onclick="location.href='/add-patient';" style="cursor: pointer;">
+        <div class="home-icon">
+            <span class="icon-span">
+                <img src="logo" alt="logo" id="icons">
+            </span>
+        </div>
+        <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
             <span class="icon-span">
                 <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
             </span>
@@ -34,7 +37,7 @@ Home
             </span>
             <p id="iconText3">Billing</p>
         </div>
-        <div class="home-icon" onclick="location.href='/analytics';" style="cursor: pointer;">
+        <div class="home-icon" onclick="location.href='/analytics-dashboard';" style="cursor: pointer;">
             <span class="icon-span">
                 <img src="{% static 'icons/analytics.png' %}" alt="home icon" id="icons">
             </span>
@@ -47,52 +50,70 @@ Home
     </div>
 </div>
 <!-- body container -->
+ <header class="header-section">
+    <p id="headerText">
+        MSRA ULTRA-ANNOTATE
+    </p>
+</header>
  <div class="main-container">
-    <div class="welcome-header">
-        <p id="headerText">What do you want to do today? {user}</p>
-    </div>
+    
     <div class="button-container">
         <div class="home-buttons">
             <span class="add-view-container">
-                <div class="add-patient" onclick="location.href='add-patients/'" style="cursor: pointer;">
+                <div class="add-patient" onclick="location.href='/add-patient'" style="cursor: pointer;">
                     <span class="add-icon">
-                        
+                        <img class="add-icon" src="{% static 'icons/add.png' %}" alt="">
                     </span>
                     <span class="add-text">
-
+                        Add Patient
                     </span>
                 </div>
-                <div class="view-analytics">
-
+                <div class="view-analytics" onclick="location.href='/analytics-dashboard'" style="cursor: pointer;">
+                    <span class="analytics-icon">
+                        <img class="analytics-icon" src="{% static 'icons/analytics.png' %}" alt="">
+                    </span>
+                    <span class="analytics-text">
+                        View Analytics
+                    </span>
                 </div>
             </span>
             <span class="view-patient-container">
-                <div class="view-patients">
-
+                <div class="view-patients" onclick="location.href='/patients'" style="cursor: pointer;">
+                    <span class="view-text">
+                        View Patients
+                    </span>
+                    <p>Total patients: {{ patients.count }}</p>
                 </div>
             </span>
         </div>
+        <!-- recent patients -->
         <div class="recent-patients">
-
+            <div class="recent-span-text">
+                <p id="recentText">Recent Patients</p>
+            </div>
+            <div class="table-container">
+                <table class="patient-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Sex</th>
+                            <th>Entry Added</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for patient in patients %}
+                        <tr style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' patient.slug %}';">
+                            <td>{{ patient.first_name }} {{ patient.middle_name }} {{ patient.last_name }}</td>
+                            <td>{{ patient.age }}</td>
+                            <td>{{ patient.sex }}</td>
+                            <td>{{ patient.created_at|date:"F j, Y, g:i a" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
  </div>
-    <script>
-        function darkenOverlay() {
-            document.getElementById('dark-overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.40)';
-            document.getElementById('iconText1').style.opacity = '1';
-            document.getElementById('iconText2').style.opacity = '1';
-            document.getElementById('iconText3').style.opacity = '1';
-            document.getElementById('iconText4').style.opacity = '1';
-
-
-        }
-        function lightenOverlay() {
-            document.getElementById('dark-overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
-            document.getElementById('iconText1').style.opacity = '0';
-            document.getElementById('iconText2').style.opacity = '0';
-            document.getElementById('iconText3').style.opacity = '0';
-            document.getElementById('iconText4').style.opacity = '0';
-        }
-    </script>
 {% endblock %}

@@ -1,0 +1,396 @@
+body {
+    height: 100vh;
+    /* width: 100vw;
+    overflow-x: hidden; */
+}
+
+div.side-panel {
+    height: 100%;
+    width: 5%;
+    background-color: #E9DCC9;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    transition: all 0.6s ease-in-out;
+    > div.logout {
+        height: 10%;
+        width: 100%;
+        background-color: red;
+    }
+    > div.logo {
+        height: 10%;
+        width: 100%;
+        /* background-color: red; */
+    }
+}
+
+div.side-panel:hover {
+    background-color: rgb(234, 227, 214);
+    /* width: 12%; */
+}
+
+div#dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 5;
+    transition: background-color 0.6s ease-in-out;
+}
+
+nav.side-panel-icons {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    height: 50%;
+    width: 100%;
+    gap: 5%;
+    /* background-color: yellow; */
+}
+
+div.home-icon {
+    /* border: 1px solid white; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+div.home-icon:hover{
+    box-shadow: 0px 1px 5px gray;
+}
+
+span.icon-span {
+    margin-left: 2vh;
+    img#icons {
+        height: 5vh; width: 5vh;
+    }
+}
+
+p#iconText1, p#iconText2, p#iconText3, p#iconText4 {
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+    transition-delay: 0.5s;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 200;
+    font-size: 1.5rem;
+    margin-left: 3vh;
+    margin-right: 2vh;
+}
+
+/* body css */
+
+header.patient-details-container {
+  margin-left: 12%;
+  height: 25%;
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  border-bottom: 1px solid dimgray;
+}
+section.patient-details {
+    height: 100%;
+    width: 50%;
+    /* background-color: dimgray; */
+    margin-left: 2%;
+    display: flex;
+    align-items: center;
+    gap: 5%;
+    > span.patient-pic {
+      height: 20vh;
+      width: 20vh;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    > span.patient-information {
+      display: flex;
+      flex-direction: column;
+      gap: 5%;
+      > div.patient-name {
+        width: 120%;
+        font-family: 'Lexend', sans-serif;
+        font-weight: 200;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 5%;
+      }
+      > div.patient-age {
+        width: 120%;
+        font-family: 'Lexend', sans-serif;
+        font-weight: 200;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 5%;
+      }
+      > div.patient-sex {
+        width: 120%;
+        font-family: 'Lexend', sans-serif;
+        font-weight: 200;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 5%;
+      }
+    }
+}
+
+section.patient-procedures {
+  height: 100%;
+  width: 20%;
+  /* background-color: dimgray; */
+  margin-left: 2%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5%;
+  /* > .dropdown-procedures {
+    margin-top: 10%;
+  } */
+}
+
+section.patient-actions {
+  height: 100%;
+  width: 30%;
+  /* background-color: dimgray; */
+  margin-left: 2%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+  > div.action-button {
+    width: 50%;
+    height: 20%;
+    background-color: dimgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+}
+
+/* PROCEDURES DROPDOWN CSS */
+div.dropdown-procedures {
+      position: relative;
+      display: inline-block;
+    }
+
+button.dropdown-toggle {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  margin-top: 5px;
+  z-index: 1;
+}
+
+.dropdown-menu a {
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f2f2f2;
+}
+
+.dropdown-procedures.open .dropdown-menu {
+  display: block;
+}
+
+/* NAVIGATION BUTTONS HTML */
+section.navigation-buttons-container {
+  margin-left: 12%;
+  height: 5%;
+  width: auto;
+  /* background-color: gray; */
+}
+
+div.navigation-buttons-parent {
+  height: 100%;
+  width: 45%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-left: 2%;
+  margin-right: 2%;
+  /* background-color: yellow; */
+  > button#navigationButton {
+    height: 100%;
+    width: 25%;
+    border: none;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255, 0);
+    border-left: 1px solid dimgray;
+    border-right: 1px solid dimgray;
+    border-bottom: 1px solid dimgray;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    font-size: 16px;
+  }
+}
+
+/* GALLERY CSS */
+section.gallery-container {
+  margin-left: 12%;
+  margin-top: 1%;
+  height: 63vh;
+  width: auto;
+  /* background-color: lightgray; */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  > div.add-photos {
+    margin-top: 2%;
+    margin-left: 2%;
+    height: 40vh;
+    width: 30vh;
+    background-color: dimgray;
+  }
+  > div.photos {
+    margin-top: 2%;
+    margin-left: 2%;
+    height: 40vh;
+    width: 30vh;
+    background-color: gray;
+    background-image: url('image.jpg');
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+div.photos .upload-date {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px;
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+div.photos:hover .upload-date {
+    transform: translateY(0);
+}
+
+img.cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.9);
+}
+
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 80%;
+  max-height: 80%;
+  animation: zoom 0.3s;
+}
+
+@keyframes zoom {
+  from {transform: scale(0.7)} 
+  to {transform: scale(1)}
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* DETAILS CSS */
+div.details-container {
+  height: 100%;
+  width: 60vh;
+  /* background-color: yellow; */
+}
+
+/* Modal Styles */
+.modal-content-wrapper {
+    position: relative;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 80%;
+    max-height: 90vh;
+}
+
+.modal-date {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-family: 'Lexend', sans-serif;
+}
+
+.modal-content {
+    max-height: 80vh;
+    width: auto;
+    margin-bottom: 10px;
+}
+
+.close {
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    color: #fff;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}

@@ -1,8 +1,107 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}Patients - Doctor Dashboard{% endblock %}
+{% block title %}
+Billing
+{% endblock %}
 
 {% block content %}
-    <h1 class="text-2xl font-bold mb-4">Patient List</h1>
-    <p>This is the Billing page.</p>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/billing.css' %}">
+<div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
+    <!-- side navigation buttons -->
+    <nav class="side-panel-icons">
+        <div class="home-icon">
+            <span class="icon-span">
+                <img src="logo" alt="logo" id="icons">
+            </span>
+        </div>
+        <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText1">Home</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/patients';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/patient.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText2">Patients</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/billing';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/billing.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText3">Billing</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/analytics-dashboard';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/analytics.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText4">Analytics</p>
+        </div>
+    </nav>
+    <!-- logout button -->
+    <div class="logout">
+
+    </div>
+</div>
+
+<div class="billing-container">
+  <h2>Ultrasound Billing</h2>
+  <form>
+    <table>
+        <tr>
+        <th>Patient Name</th>
+        <td>
+            <select id="patient-name" name="patient-name">
+            {% for patient in patients|dictsort:"last_name" %}
+                <option value="{{ patient.id }}">{{ patient.last_name|capfirst }}, {{ patient.first_name|capfirst }} {{ patient.middle_name|capfirst }}</option>
+            {% endfor %}
+            </select>
+        </td>
+        </tr>
+        <tr>
+        <th>Procedure</th>
+        <td>
+            <input type="checkbox" id="procedure-abdominal" name="procedure" value="abdominal">
+            <label for="procedure-abdominal">Abdominal</label><br>
+            <input type="checkbox" id="procedure-pelvic" name="procedure" value="pelvic">
+            <label for="procedure-pelvic">Pelvic</label><br>
+            <input type="checkbox" id="procedure-obstetric" name="procedure" value="obstetric">
+            <label for="procedure-obstetric">Obstetric</label><br>
+            <input type="checkbox" id="procedure-thyroid" name="procedure" value="thyroid">
+            <label for="procedure-thyroid">Thyroid</label><br>
+            <input type="checkbox" id="procedure-breast" name="procedure" value="breast">
+            <label for="procedure-breast">Breast</label><br>
+        </td>
+        </tr>
+        <tr>
+            <th>Cost</th>
+            <td><input type="number" id="cost" name="cost"></td>
+        </tr>
+        <tr>
+            <th>Insurance Coverage</th>
+            <td><input type="number" id="insurance-coverage" name="insurance-coverage"></td>
+        </tr>
+        <tr>
+            <th>Total Due</th>
+            <td><input type="number" id="total-due" name="total-due" readonly></td>
+        </tr>
+    </table>
+  </form>
+</div>
+
+<script>
+  // Calculate total due on input change
+  document.getElementById('cost').addEventListener('input', calculateTotalDue);
+  document.getElementById('insurance-coverage').addEventListener('input', calculateTotalDue);
+
+  function calculateTotalDue() {
+    const cost = parseFloat(document.getElementById('cost').value);
+    const insuranceCoverage = parseFloat(document.getElementById('insurance-coverage').value);
+    const totalDue = cost - insuranceCoverage;
+    document.getElementById('total-due').value = totalDue.toFixed(2);
+  }
+</script>
 {% endblock %}
