@@ -71,6 +71,14 @@ span.icon-span {
     }
 }
 
+span.logo-span {
+    display: flex;
+    justify-content: center;
+    img#icons {
+        height: 90%; width: 90%;
+    }
+}
+
 p#iconText1, p#iconText2, p#iconText3, p#iconText4 {
     opacity: 0;
     transition: opacity 0.3s ease-in;

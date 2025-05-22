@@ -4,9 +4,48 @@
 {% load static %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/analytics.css' %}">
+<link rel="stylesheet" href="{% static 'css/analytics_dashboard.css' %}">
 <!-- Include Plotly.js -->
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<div class="side-panel">
+    <!-- side navigation buttons -->
+    <nav class="side-panel-icons">
+        <div class="home-icon">
+            <span class="logo-span">
+                <img src="{% static 'icons/logo.png' %}" alt="logo" id="icons">
+            </span>
+        </div>
+        <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText1">Home</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/patients';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/patient.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText2">Patients</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/billing';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/billing.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText3">Billing</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/analytics-dashboard';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/analytics.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText4">Analytics</p>
+        </div>
+    </nav>
+    <!-- logout button -->
+    <div class="logout">
+
+    </div>
+</div>
 
 <div class="analytics-container">
     <h1>Analytics Dashboard</h1>

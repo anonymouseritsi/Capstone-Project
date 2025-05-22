@@ -8,6 +8,37 @@
   <style>
     canvas { border: 1px solid black; }
     #controls { margin-top: 10px; }
+    .annotation-form {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      z-index: 1000;
+      display: none;
+    }
+    .annotation-form textarea {
+      width: 100%;
+      min-height: 100px;
+      margin: 10px 0;
+      padding: 8px;
+    }
+    .annotation-form button {
+      margin: 5px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+    .note-label {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      max-width: 200px;
+      word-wrap: break-word;
+    }
   </style>
 </head>
 <body>
@@ -21,11 +52,19 @@
     <button id="undoAnnotation">Undo</button>
   </div>
 
-  <script>
+  <!-- Add annotation note form -->
+  <div id="annotationForm" class="annotation-form">
+    <h3>Add Note to Annotation</h3>
+    <textarea id="annotationNote" placeholder="Enter your note here..."></textarea>
+    <button onclick="saveNote()">Save Note</button>
+    <button onclick="cancelNote()">Cancel</button>
+  </div>
 
+  <script>
     let canvas = new fabric.Canvas('canvas');
     let undoStack = [];
     let currentMode = null; // Current annotation mode (length or width)
+    let currentAnnotation = null; // Store the current annotation being created
 
     // Load the latest uploaded image from API
     fetch('/api/images/')
@@ -73,7 +112,11 @@
     // Track all line annotations for undo
     canvas.on('object:added', function(e) {
       if (e.target.type === 'line') {
-        undoStack.push({line: e.target, label: e.target.label});
+        undoStack.push({
+          line: e.target,
+          label: e.target.label,
+          noteLabel: e.target.noteLabel
+        });
       }
     });
 
@@ -82,7 +125,10 @@
       if (undoStack.length > 0) {
         let last = undoStack.pop();
         canvas.remove(last.line);
-        canvas.remove(last.label);  // Remove label associated with the line
+        canvas.remove(last.label);
+        if (last.noteLabel) {
+          canvas.remove(last.noteLabel);
+        }
         canvas.renderAll();
       }
     });
@@ -141,15 +187,13 @@
       let length = Math.sqrt(Math.pow(endPoint.x - startPoint.x, 2) + Math.pow(endPoint.y - startPoint.y, 2));
 
       if (currentMode === 'length') {
-        // For length annotation, show the distance (length) between points
         text.set({
           text: `Length: ${length.toFixed(2)} px`,
           left: (startPoint.x + endPoint.x) / 2,
           top: (startPoint.y + endPoint.y) / 2 - 20
         });
       } else if (currentMode === 'width') {
-        // For width annotation, we check vertical or horizontal distance (width)
-        let width = currentMode === 'width' ? Math.abs(endPoint.x - startPoint.x) : Math.abs(endPoint.y - startPoint.y);
+        let width = Math.abs(endPoint.x - startPoint.x);
         text.set({
           text: `Width: ${width.toFixed(2)} px`,
           left: (startPoint.x + endPoint.x) / 2,
@@ -164,13 +208,55 @@
       if (!isDrawing || !line) return;
       isDrawing = false;
 
-      // Finalize the line and label
-      let annotation = {
+      // Store the current annotation and show the note form
+      currentAnnotation = {
         line: line,
         label: text
       };
-      undoStack.push(annotation);  // Push the line and label to undo stack
+      
+      // Show the annotation form
+      document.getElementById('annotationForm').style.display = 'block';
     });
+
+    // Function to save the note
+    function saveNote() {
+      const note = document.getElementById('annotationNote').value.trim();
+      if (note && currentAnnotation) {
+        // Create note label
+        const noteLabel = new fabric.Text(note, {
+          left: (currentAnnotation.line.x1 + currentAnnotation.line.x2) / 2,
+          top: (currentAnnotation.line.y1 + currentAnnotation.line.y2) / 2 + 20,
+          fontSize: 12,
+          fill: 'black',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          padding: 5,
+          selectable: false
+        });
+
+        canvas.add(noteLabel);
+        currentAnnotation.line.noteLabel = noteLabel;
+        
+        // Update the undo stack with the note
+        if (undoStack.length > 0) {
+          undoStack[undoStack.length - 1].noteLabel = noteLabel;
+        }
+      }
+      
+      // Clear and hide the form
+      closeNoteForm();
+    }
+
+    // Function to cancel note addition
+    function cancelNote() {
+      closeNoteForm();
+    }
+
+    // Helper function to close the note form
+    function closeNoteForm() {
+      document.getElementById('annotationNote').value = '';
+      document.getElementById('annotationForm').style.display = 'none';
+      currentAnnotation = null;
+    }
 
     // Save the annotations
     function saveAnnotations() {
@@ -197,7 +283,6 @@
       })
       .catch(error => console.error("Error saving annotation:", error));
     }
-
-
-    
   </script>
+</body>
+</html>

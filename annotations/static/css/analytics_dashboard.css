@@ -1,0 +1,122 @@
+body {
+    height: 100vh;
+    width: 100vw;
+}
+
+div.side-panel {
+    height: 100%;
+    width: 5%;
+    background-color: #E9DCC9;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    box-shadow: 0px 2px 10px rgb(0, 0, 0, 0.5);
+    transition: all 0.6s ease-in-out;
+    > div.logout {
+        height: 10%;
+        width: 100%;
+        background-color: red;
+    }
+    > div.logo {
+        height: 10%;
+        width: 100%;
+        /* background-color: red; */
+    }
+}
+
+div.side-panel:hover {
+    background-color: rgb(234, 227, 214);
+    /* width: 12%; */
+}
+
+div#dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 5;
+    transition: background-color 0.6s ease-in-out;
+}
+
+nav.side-panel-icons {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    height: 30%;
+    width: 100%;
+    gap: 5%;
+    /* background-color: yellow; */
+}
+
+div.home-icon {
+    /* border: 1px solid white; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+div.home-icon:hover{
+    box-shadow: 0px 1px 5px gray;
+}
+
+span.icon-span {
+    margin-left: 2vh;
+    img#icons {
+        height: 5vh; width: 5vh;
+    }
+}
+
+span.logo-span {
+    display: flex;
+    justify-content: center;
+    img#icons {
+        height: 90%; width: 90%;
+    }
+}
+
+p#iconText1, p#iconText2, p#iconText3, p#iconText4 {
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+    transition-delay: 0.5s;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 200;
+    font-size: 1.5rem;
+    margin-left: 3vh;
+    margin-right: 2vh;
+
+}
+
+header.header-section {
+    height: 10vh;
+    margin-left: 6%;
+    padding: 1vh 2vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    margin-bottom: 2vh;
+}
+
+header.header-section > p#headerText {
+    font-weight: 600;
+    font-size: 1.8rem;
+    color: #2d3748;}
+
+    /* ANALYTICS DASHBOARD CSS */
+
+div.analytics-container {
+    margin-left: 7%;
+    background-color: #f8f9fa;
+}
