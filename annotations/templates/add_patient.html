@@ -4,48 +4,24 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/add_patient.css' %}">
 
+
 <form method="post" class="custom-form">
     {% csrf_token %}
     <h2 class="text-2xl font-bold mb-4">Medical Form</h2>
-
-    {% if form.errors %}
-    <div class="alert alert-danger">
-        <strong>Please correct the following errors:</strong>
-        <ul>
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <li>{{ field.label }}: {{ error }}</li>
-                {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
 
     <!-- Full Name Row -->
     <div class="form-row">
         <div class="form-group">
             {{ form.first_name.label_tag }}  
             {{ form.first_name }}
-            {% if form.first_name.errors %}
-                <div class="error">{{ form.first_name.errors.0 }}</div>
-            {% endif %}
         </div>
         <div class="form-group">
             {{ form.middle_name.label_tag }}  
             {{ form.middle_name }}
-            {% if form.middle_name.errors %}
-                <div class="error">{{ form.middle_name.errors.0 }}</div>
-            {% endif %}
         </div>
         <div class="form-group">
             {{ form.last_name.label_tag }}  
             {{ form.last_name }}
-            {% if form.last_name.errors %}
-                <div class="error">{{ form.last_name.errors.0 }}</div>
-            {% endif %}
         </div>
     </div>
 
@@ -54,308 +30,49 @@
         <div class="form-group">
             {{ form.age.label_tag }}  
             {{ form.age }}
-            {% if form.age.errors %}
-                <div class="error">{{ form.age.errors.0 }}</div>
-            {% endif %}
         </div>
         <div class="form-group">
             {{ form.sex.label_tag }}  
             {{ form.sex }}
-            {% if form.sex.errors %}
-                <div class="error">{{ form.sex.errors.0 }}</div>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Address Fields -->
-    <div class="form-row">
-        <div class="form-group">
-            {{ form.region_code.label_tag }}
-            {{ form.region_code }}
-            {% if form.region_code.errors %}
-                <div class="error">{{ form.region_code.errors.0 }}</div>
-            {% endif %}
-        </div>
-        <div class="form-group">
-            {{ form.province_code.label_tag }}
-            {{ form.province_code }}
-            {% if form.province_code.errors %}
-                <div class="error">{{ form.province_code.errors.0 }}</div>
-            {% endif %}
         </div>
     </div>
 
     <div class="form-row">
         <div class="form-group">
-            {{ form.city_municipality_code.label_tag }}
-            {{ form.city_municipality_code }}
-            {% if form.city_municipality_code.errors %}
-                <div class="error">{{ form.city_municipality_code.errors.0 }}</div>
-            {% endif %}
+            {{ form.baranggay.label_tag }}  
+            {{ form.baranggay }}
         </div>
         <div class="form-group">
-            {{ form.barangay_code.label_tag }}
-            {{ form.barangay_code }}
-            {% if form.barangay_code.errors %}
-                <div class="error">{{ form.barangay_code.errors.0 }}</div>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="form-row">
-        <div class="form-group">
-            {{ form.street.label_tag }}
+            {{ form.street.label_tag }}  
             {{ form.street }}
-            {% if form.street.errors %}
-                <div class="error">{{ form.street.errors.0 }}</div>
-            {% endif %}
+        </div>
+    </div>
+
+
+    <div class="form-row">
+        <div class="form-group">
+            {{ form.province.label_tag }}  
+            {{ form.province }}
+        </div>
+        <div class="form-group">
+            {{ form.city_municipality.label_tag }}  
+            {{ form.city_municipality }}
         </div>
     </div>
 
     <div class="form-group">
         {{ form.contact_number.label_tag }}
         {{ form.contact_number }}
-        {% if form.contact_number.errors %}
-            <div class="error">{{ form.contact_number.errors.0 }}</div>
-        {% endif %}
     </div>
-
+    <!-- Render remaining fields as needed -->
     <div class="form-group">
         {{ form.email.label_tag }}
         {{ form.email }}
-        {% if form.email.errors %}
-            <div class="error">{{ form.email.errors.0 }}</div>
-        {% endif %}
     </div>
+
 
     <!-- Submit -->
     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded" id="submit-btn">Save Patient</button>
+
 </form>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const regionSelect = document.getElementById('id_region_code');
-    const provinceSelect = document.getElementById('id_province_code');
-    const cityMunicipalitySelect = document.getElementById('id_city_municipality_code');
-    const barangaySelect = document.getElementById('id_barangay_code');
-    const form = document.querySelector('form');
-
-    // Helper function to show error message
-    function showError(message) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'alert alert-danger';
-        errorDiv.textContent = message;
-        form.insertBefore(errorDiv, form.firstChild);
-        setTimeout(() => errorDiv.remove(), 5000);
-    }
-
-    // Helper function to update select options
-    async function updateSelect(url, selectElement, placeholder) {
-        console.log('Fetching from URL:', url);
-        selectElement.disabled = true;
-        
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            console.log('Received data:', data);
-            
-            // Clear existing options
-            selectElement.innerHTML = `<option value="">${placeholder}</option>`;
-            
-            if (Array.isArray(data) && data.length > 0) {
-                // Sort data by name
-                data.sort((a, b) => a.name.localeCompare(b.name));
-                
-                // Add new options
-                data.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.code;
-                    option.textContent = item.name;
-                    selectElement.appendChild(option);
-                });
-            } else {
-                throw new Error('No data received from API');
-            }
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            selectElement.innerHTML = `<option value="">${placeholder}</option>`;
-            showError(`Error loading ${placeholder.toLowerCase()}: ${error.message}`);
-        } finally {
-            selectElement.disabled = false;
-        }
-    }
-
-    // Region change handler
-    regionSelect.addEventListener('change', async function() {
-        const regionCode = this.value;
-        console.log('Selected region:', regionCode);
-        
-        // Reset dependent fields
-        provinceSelect.innerHTML = '<option value="">---Select Province---</option>';
-        cityMunicipalitySelect.innerHTML = '<option value="">---Select City/Municipality---</option>';
-        barangaySelect.innerHTML = '<option value="">---Select Barangay---</option>';
-        
-        if (regionCode) {
-            await updateSelect(
-                `https://psgc.gitlab.io/api/regions/${regionCode}/provinces`,
-                provinceSelect,
-                '---Select Province---'
-            );
-        }
-    });
-
-    // Province change handler
-    provinceSelect.addEventListener('change', async function() {
-        const provinceCode = this.value;
-        console.log('Selected province:', provinceCode);
-        
-        // Reset dependent fields
-        cityMunicipalitySelect.innerHTML = '<option value="">---Select City/Municipality---</option>';
-        barangaySelect.innerHTML = '<option value="">---Select Barangay---</option>';
-        
-        if (provinceCode) {
-            try {
-                console.log('Fetching cities and municipalities for province:', provinceCode);
-                const [citiesResponse, municipalitiesResponse] = await Promise.all([
-                    fetch(`https://psgc.gitlab.io/api/provinces/${provinceCode}/cities`),
-                    fetch(`https://psgc.gitlab.io/api/provinces/${provinceCode}/municipalities`)
-                ]);
-
-                if (!citiesResponse.ok) throw new Error(`HTTP error! status: ${citiesResponse.status}`);
-                if (!municipalitiesResponse.ok) throw new Error(`HTTP error! status: ${municipalitiesResponse.status}`);
-
-                const cities = await citiesResponse.json();
-                const municipalities = await municipalitiesResponse.json();
-                
-                console.log('Cities:', cities);
-                console.log('Municipalities:', municipalities);
-
-                // Update city/municipality select
-                cityMunicipalitySelect.innerHTML = '<option value="">---Select City/Municipality---</option>';
-                
-                const allLocations = [...cities, ...municipalities].sort((a, b) => a.name.localeCompare(b.name));
-                
-                allLocations.forEach(location => {
-                    const option = document.createElement('option');
-                    option.value = location.code;
-                    option.textContent = location.name;
-                    cityMunicipalitySelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Error fetching cities/municipalities:', error);
-                showError(`Error loading cities/municipalities: ${error.message}`);
-            }
-        }
-    });
-
-    // City/Municipality change handler
-    cityMunicipalitySelect.addEventListener('change', async function() {
-        const code = this.value;
-        console.log('Selected city/municipality:', code);
-        
-        // Reset barangay
-        barangaySelect.innerHTML = '<option value="">---Select Barangay---</option>';
-        
-        if (code) {
-            try {
-                // Try both city and municipality endpoints
-                const cityResponse = await fetch(`https://psgc.gitlab.io/api/cities/${code}/barangays`);
-                const muniResponse = await fetch(`https://psgc.gitlab.io/api/municipalities/${code}/barangays`);
-                
-                let barangays = [];
-                
-                if (cityResponse.ok) {
-                    barangays = await cityResponse.json();
-                } else if (muniResponse.ok) {
-                    barangays = await muniResponse.json();
-                } else {
-                    // If both fail, try getting all barangays and filter
-                    const allBarangaysResponse = await fetch('https://psgc.gitlab.io/api/barangays');
-                    if (allBarangaysResponse.ok) {
-                        const allBarangays = await allBarangaysResponse.json();
-                        barangays = allBarangays.filter(b => 
-                            b.cityCode === code || b.municipalityCode === code
-                        );
-                    } else {
-                        throw new Error('Failed to load barangays');
-                    }
-                }
-                
-                console.log('Barangays:', barangays);
-                
-                // Update barangay select
-                barangaySelect.innerHTML = '<option value="">---Select Barangay---</option>';
-                
-                if (barangays.length > 0) {
-                    barangays.sort((a, b) => a.name.localeCompare(b.name));
-                    barangays.forEach(barangay => {
-                        const option = document.createElement('option');
-                        option.value = barangay.code;
-                        option.textContent = barangay.name;
-                        barangaySelect.appendChild(option);
-                    });
-                } else {
-                    throw new Error('No barangays found');
-                }
-            } catch (error) {
-                console.error('Error fetching barangays:', error);
-                showError(`Error loading barangays: ${error.message}`);
-            }
-        }
-    });
-
-    // Form submit handler
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Check if required fields are filled
-        const requiredFields = [
-            'first_name', 'last_name', 'age', 'sex',
-            'region_code', 'province_code', 'city_municipality_code', 'barangay_code'
-        ];
-        
-        const errors = [];
-        requiredFields.forEach(field => {
-            const input = document.getElementById(`id_${field}`);
-            if (!input.value) {
-                errors.push(`${field.replace(/_/g, ' ')} is required`);
-            }
-        });
-        
-        if (errors.length > 0) {
-            showError(errors.join('\n'));
-        } else {
-            this.submit();
-        }
-    });
-
-    // Log initial values if they exist (for editing existing records)
-    console.log('Initial values:', {
-        region: regionSelect.value,
-        province: provinceSelect.value,
-        cityMunicipality: cityMunicipalitySelect.value,
-        barangay: barangaySelect.value
-    });
-});
-</script>
-
-<style>
-.error {
-    color: red;
-    font-size: 0.8em;
-    margin-top: 0.2em;
-}
-.alert-danger {
-    background-color: #fee2e2;
-    border: 1px solid #ef4444;
-    color: #dc2626;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 0.375rem;
-}
-</style>
 {% endblock %}
-

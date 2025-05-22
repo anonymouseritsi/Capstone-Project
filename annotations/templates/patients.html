@@ -44,6 +44,7 @@
 </div>
 
 <!-- BODY CONTENT -->
+<<<<<<< HEAD
 <div class="main-container">
     <header class="header-section">
         <p id="headerText">
@@ -56,6 +57,32 @@
                     <option value="date">Sort by Date</option>
                     <option value="age">Sort by Age</option>
                 </select>
+=======
+<header class="header-section">
+    <p id="headerText">
+        Patient's Gallery
+    </p>
+    <span class="search-span">
+        <div class="sort-button">
+            
+        </div>
+        <div class="search-container">
+
+        </div>
+    </span>
+</header>
+<section class="patient-list">
+    {% for x in patient %}
+    <div class="banner" style="cursor: pointer;" onclick="window.location.href = '{% url 'patient_manager:patient_details' x.slug %}';">
+        <div class="profile">
+            <span class="dot">
+
+            </span>
+        </div>
+        <div class="patient-info">
+            <div class="patient-name">
+                Name : {{ x.first_name|capfirst }} {{ x.middle_name|capfirst }} {{ x.last_name|capfirst }}
+>>>>>>> parent of f0473c9 (added API, sort patients, and search patients)
             </div>
             <div class="search-container">
                 <input type="text" id="searchInput" placeholder="Search patients..." onkeyup="searchPatients()">
@@ -91,6 +118,7 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
         {% endfor %}
     </section>
 </div>
@@ -131,4 +159,9 @@ function sortPatients(criteria) {
     patientCards.forEach(card => patientList.appendChild(card));
 }
 </script>
+=======
+    </div>
+    {% endfor %}
+</section>
+>>>>>>> parent of f0473c9 (added API, sort patients, and search patients)
 {% endblock %}
