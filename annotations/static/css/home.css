@@ -85,7 +85,26 @@ p#iconText1, p#iconText2, p#iconText3, p#iconText4 {
     font-size: 1.5rem;
     margin-left: 3vh;
     margin-right: 2vh;
+
 }
+
+header.header-section {
+    height: 10vh;
+    margin-left: 6%;
+    padding: 1vh 2vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    margin-bottom: 2vh;
+}
+
+header.header-section > p#headerText {
+    font-weight: 600;
+    font-size: 1.8rem;
+    color: #2d3748;}
 
 /* BODY HTML */
 div.main-container{
@@ -93,7 +112,8 @@ div.main-container{
     justify-content: space-evenly;
     flex-direction: column;
     height: 100vh;
-    margin-left: 12%;
+    margin-left: 6%;
+    background-color: #718096;
 }
 div.welcome-header {
     /* border: 1px solid yellow; */

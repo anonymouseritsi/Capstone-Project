@@ -1,6 +1,6 @@
 import csv
 from django.utils.text import slugify
-from annotations.models import Patient
+from .models import Patient
 
 def run():
     with open('annotations/data/MOCK_DATA.csv', newline='', encoding='utf-8') as csvfile:
