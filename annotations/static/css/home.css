@@ -234,6 +234,13 @@ div.view-patients {
     transition: all 0.2s ease-in-out;
 }
 
+div.view-patients .view-text {
+    font-family: 'Lexend', sans-serif;
+    font-weight: 200;
+    font-size: 1rem;
+    opacity: 0.2;
+}
+
 div.view-patients:hover {
     box-shadow: 4px 4px 10px rgb(0, 0, 0, 0.5);
 }

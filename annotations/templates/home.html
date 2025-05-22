@@ -11,7 +11,7 @@ Home
 <!-- dark overlay for the side panel -->
 <!-- <div class="dark-overlay" id='dark-overlay'></div> -->
 <!-- side panel -->
-<div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
+<div class="side-panel">
     <!-- side navigation buttons -->
     <nav class="side-panel-icons">
         <div class="home-icon">
@@ -82,6 +82,7 @@ Home
                     <span class="view-text">
                         View Patients
                     </span>
+                    <p>Total patients: {{ patients.count }}</p>
                 </div>
             </span>
         </div>
