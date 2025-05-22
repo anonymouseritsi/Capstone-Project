@@ -83,7 +83,7 @@
       <button class="dropdown-toggle">Procedure : {{ procedure.get_procedure_type_display|default:"No recorded procedure" }}</button>
       <div class="dropdown-menu">
         {% for choice in Procedure.PROCEDURE_CHOICES %}
-          <a href="#" class="dropdown-item">{{ choice.1 }}</a>
+          <a href="{% url 'add_procedure' patient.id choice.0 %}" class="dropdown-item">{{ choice.1 }}</a>
         {% endfor %}
       </div>
     </div>
