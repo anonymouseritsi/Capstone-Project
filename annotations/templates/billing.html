@@ -6,27 +6,97 @@ Billing
 {% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/billing.css' %}">
+<div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
+    <!-- side navigation buttons -->
+    <nav class="side-panel-icons">
+        <div class="home-icon">
+            <span class="icon-span">
+                <img src="logo" alt="logo" id="icons">
+            </span>
+        </div>
+        <div class="home-icon" onclick="location.href='/home';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/home.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText1">Home</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/patients';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/patient.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText2">Patients</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/billing';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/billing.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText3">Billing</p>
+        </div>
+        <div class="home-icon" onclick="location.href='/analytics-dashboard';" style="cursor: pointer;">
+            <span class="icon-span">
+                <img src="{% static 'icons/analytics.png' %}" alt="home icon" id="icons">
+            </span>
+            <p id="iconText4">Analytics</p>
+        </div>
+    </nav>
+    <!-- logout button -->
+    <div class="logout">
+
+    </div>
+</div>
+
 <div class="billing-container">
   <h2>Ultrasound Billing</h2>
-  <table>
-    <tr>
-      <th>Patient Name</th>
-      <th>Procedure</th>
-      <th>Cost</th>
-      <th>Insurance Coverage</th>
-      <th>Balance Due</th>
-    </tr>
-    <tr>
-      <td>{{ patient_name }}</td>
-      <td>Ultrasound ({{ procedure_type }})</td>
-      <td>₱{{ cost }}</td>
-      <td>₱{{ insurance_coverage }}</td>
-      <td>₱{{ balance_due }}</td>
-    </tr>
-  </table>
-  <p class="notes">Notes: {{ notes }}</p>
-  <p class="status">Status: {{ status }}</p>
+  <form>
+    <table>
+        <tr>
+        <th>Patient Name</th>
+        <td>
+            <select id="patient-name" name="patient-name">
+            {% for patient in patients|dictsort:"last_name" %}
+                <option value="{{ patient.id }}">{{ patient.last_name|capfirst }}, {{ patient.first_name|capfirst }} {{ patient.middle_name|capfirst }}</option>
+            {% endfor %}
+            </select>
+        </td>
+        </tr>
+        <tr>
+        <th>Procedure</th>
+        <td>
+            {% for choice in PROCEDURE_CHOICES %}
+            <input type="checkbox" id="procedure-{{ choice.0 }}" name="procedure" value="{{ choice.0 }}" {% if patient.procedure == choice.0 %}checked{% endif %}>
+            <label for="procedure-{{ choice.0 }}">{{ choice.1 }}</label>
+            <br>
+            {% endfor %}
+        </td>
+        </tr>
+        <tr>
+            <th>Cost</th>
+            <td><input type="number" id="cost" name="cost"></td>
+        </tr>
+        <tr>
+            <th>Insurance Coverage</th>
+            <td><input type="number" id="insurance-coverage" name="insurance-coverage"></td>
+        </tr>
+        <tr>
+            <th>Total Due</th>
+            <td><input type="number" id="total-due" name="total-due" readonly></td>
+        </tr>
+    </table>
+  </form>
 </div>
-{% endblock %}
 
+<script>
+  // Calculate total due on input change
+  document.getElementById('cost').addEventListener('input', calculateTotalDue);
+  document.getElementById('insurance-coverage').addEventListener('input', calculateTotalDue);
+
+  function calculateTotalDue() {
+    const cost = parseFloat(document.getElementById('cost').value);
+    const insuranceCoverage = parseFloat(document.getElementById('insurance-coverage').value);
+    const totalDue = cost - insuranceCoverage;
+    document.getElementById('total-due').value = totalDue.toFixed(2);
+  }
+</script>
+{% endblock %}
