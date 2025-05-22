@@ -1,10 +1,78 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Add Patient{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">Add Patient</h2>
-<form method="post" class="space-y-4">
+<link rel="stylesheet" href="{% static 'css/add_patient.css' %}">
+
+
+<form method="post" class="custom-form">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Patient</button>
+    <h2 class="text-2xl font-bold mb-4">Medical Form</h2>
+
+    <!-- Full Name Row -->
+    <div class="form-row">
+        <div class="form-group">
+            {{ form.first_name.label_tag }}  
+            {{ form.first_name }}
+        </div>
+        <div class="form-group">
+            {{ form.middle_name.label_tag }}  
+            {{ form.middle_name }}
+        </div>
+        <div class="form-group">
+            {{ form.last_name.label_tag }}  
+            {{ form.last_name }}
+        </div>
+    </div>
+
+    <!-- Age and Sex Row -->
+    <div class="form-row">
+        <div class="form-group">
+            {{ form.age.label_tag }}  
+            {{ form.age }}
+        </div>
+        <div class="form-group">
+            {{ form.sex.label_tag }}  
+            {{ form.sex }}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            {{ form.baranggay.label_tag }}  
+            {{ form.baranggay }}
+        </div>
+        <div class="form-group">
+            {{ form.street.label_tag }}  
+            {{ form.street }}
+        </div>
+    </div>
+
+
+    <div class="form-row">
+        <div class="form-group">
+            {{ form.province.label_tag }}  
+            {{ form.province }}
+        </div>
+        <div class="form-group">
+            {{ form.city_municipality.label_tag }}  
+            {{ form.city_municipality }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {{ form.contact_number.label_tag }}
+        {{ form.contact_number }}
+    </div>
+    <!-- Render remaining fields as needed -->
+    <div class="form-group">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+    </div>
+
+
+    <!-- Submit -->
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded" id="submit-btn">Save Patient</button>
+
 </form>
 {% endblock %}

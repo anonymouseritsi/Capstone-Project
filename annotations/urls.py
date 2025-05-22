@@ -31,4 +31,7 @@ urlpatterns = [
     path('patient/<slug:slug>/download_details/', views.download_patient_details, name='download_patient_details'),
     path('annotate/<slug:slug>/', views.annotate_image, name='annotate'),
     path('save-annotation/<slug:slug>/', views.save_annotation, name='save_annotation'),
+    path('analytics-dashboard/', views.analytics_dashboard, name='analytics_dashboard'),
+
+
 ]

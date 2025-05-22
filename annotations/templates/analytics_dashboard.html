@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f7f9fb;
+        }
+        h2 {
+            margin-top: 50px;
+            color: #333;
+        }
+        .chart-container {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 50%;
+            max-width: 800px;
+        }
+        canvas {
+            width: 50% !important;
+            height: 400px !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ultrasound Clinic Analytics Dashboard</h1>
+
+    <div class="dashboard-container">
+
+        <!-- Doughnut Chart -->
+        <div class="chart-box">
+            <h2>Procedure Type Distribution</h2>
+            <canvas id="procedureTypeChart" width="100" height="100"></canvas>
+        </div>
+
+        <!-- Line Chart -->
+        <div class="chart-box">
+            <h2>Procedures Over Time</h2>
+            <canvas id="lineChart" width="100" height="100"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h2>Province Distribution</h2>
+            <canvas id="barChart" width="100" height="100"></canvas>
+        </div>
+
+    </div>
+
+    <script>
+        // Bar Data
+        const procTypeCtx = document.getElementById('procedureTypeChart').getContext('2d');
+        const procTypeChart = new Chart(procTypeCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ proc_dist_labels|safe }},
+                datasets: [{
+                    label: 'Procedures',
+                    data: {{ proc_dist_counts|safe }},
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF'
+                    ],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'right' },
+                    title: { display: true, text: 'Distribution of Procedure Types' }
+                }
+            }
+        });
+
+        // Line Chart Data
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        const lineChart = new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: {{ proc_time_labels|safe }},
+                datasets: [
+                    {% for ds in proc_time_datasets %}
+                    {
+                        label: "{{ ds.label }}",
+                        data: {{ ds.data|safe }},
+                        borderColor: "{{ ds.borderColor }}",
+                        fill: false,
+                        tension: 0.2,
+                    },
+                    {% endfor %}
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: { mode: 'nearest', intersect: false },
+                scales: {
+                    x: { title: { display: true, text: 'Date' } },
+                    y: { beginAtZero: true, title: { display: true, text: 'Number of Procedures' } }
+                }
+            }
+        });
+
+        
+    </script>
+
+    <script>
+        const ctx = document.getElementById('barChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ labels|safe }},
+                datasets: [{
+                    label: 'Number of Patients',
+                    data: {{ counts|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y', // horizontal bar chart
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Patients'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Province'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
