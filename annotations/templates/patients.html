@@ -5,7 +5,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/patients.css' %}">
-<div class="side-panel" onmouseover="darkenOverlay()" onmouseout="lightenOverlay()">
+<div class="side-panel">
     <!-- side navigation buttons -->
     <nav class="side-panel-icons">
         <div class="home-icon">
@@ -40,59 +40,60 @@
     </nav>
     <!-- logout button -->
     <div class="logout">
-
     </div>
 </div>
 
 <!-- BODY CONTENT -->
-<header class="header-section">
-    <p id="headerText">
-        Patient's Gallery
-    </p>
-    <span class="search-span">
-        <div class="sort-button">
-            <select id="sortSelect" onchange="sortPatients(this.value)">
-                <option value="name">Sort by Name</option>
-                <option value="date">Sort by Date</option>
-                <option value="age">Sort by Age</option>
-            </select>
-        </div>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search patients..." onkeyup="searchPatients()">
-            <img src="{% static 'icons/search.png' %}" alt="search" class="search-icon">
-        </div>
-    </span>
-</header>
-<section class="patient-list" id="patientList">
-    {% for x in patient %}
-    <div class="banner patient-card" style="cursor: pointer;" 
-         onclick="window.location.href='{% url 'patient_manager:patient_details' x.slug %}';"
-         data-name="{{ x.first_name|lower }} {{ x.middle_name|lower }} {{ x.last_name|lower }}"
-         data-age="{{ x.age }}"
-         data-date="{{ x.created_at|date:'Y-m-d' }}">
-        <div class="profile">
-            <span class="dot">
-            </span>
-        </div>
-        <div class="patient-info">
-            <div class="patient-name">
-                Name : {{ x.first_name|capfirst }} {{ x.middle_name|capfirst }} {{ x.last_name|capfirst }}
+<div class="main-container">
+    <header class="header-section">
+        <p id="headerText">
+            Patient's Gallery
+        </p>
+        <span class="search-span">
+            <div class="sort-button">
+                <select id="sortSelect" onchange="sortPatients(this.value)">
+                    <option value="name">Sort by Name</option>
+                    <option value="date">Sort by Date</option>
+                    <option value="age">Sort by Age</option>
+                </select>
             </div>
-            <div class="patient-age-sex">
-                <span class="age">
-                    Age : {{ x.age }}
-                </span>
-                <span class="sex">
-                    Sex : {{ x.sex }}
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search patients..." onkeyup="searchPatients()">
+                <img src="{% static 'icons/search.png' %}" alt="search" class="search-icon">
+            </div>
+        </span>
+    </header>
+    <section class="patient-list" id="patientList">
+        {% for x in patient %}
+        <div class="banner patient-card" style="cursor: pointer;" 
+             onclick="window.location.href='{% url 'patient_manager:patient_details' x.slug %}';"
+             data-name="{{ x.first_name|lower }} {{ x.middle_name|lower }} {{ x.last_name|lower }}"
+             data-age="{{ x.age }}"
+             data-date="{{ x.created_at|date:'Y-m-d' }}">
+            <div class="profile">
+                <span class="dot">
                 </span>
             </div>
-            <div class="patient-date">
-                Date : {{ x.created_at }}
+            <div class="patient-info">
+                <div class="patient-name">
+                    Name : {{ x.first_name|capfirst }} {{ x.middle_name|capfirst }} {{ x.last_name|capfirst }}
+                </div>
+                <div class="patient-age-sex">
+                    <span class="age">
+                        Age : {{ x.age }}
+                    </span>
+                    <span class="sex">
+                        Sex : {{ x.sex }}
+                    </span>
+                </div>
+                <div class="patient-date">
+                    Date : {{ x.created_at }}
+                </div>
             </div>
         </div>
-    </div>
-    {% endfor %}
-</section>
+        {% endfor %}
+    </section>
+</div>
 
 <script>
 function searchPatients() {
