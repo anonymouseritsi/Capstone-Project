@@ -1,0 +1,40 @@
+.billing-container {
+  width: 80%;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid black;
+}
+
+.billing-container h2 {
+  color: black;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.billing-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.billing-container table th, .billing-container table td {
+  border: 1px solid;
+  padding: 10px;
+  text-align: left;
+}
+
+.billing-container table th {
+  background-color: grey;
+}
+
+.billing-container p {
+  margin-bottom: 20px;
+}
+
+.billing-container .notes {
+  font-style: italic;
+}
+
+.billing-container .status {
+  font-weight: bold;
+}
