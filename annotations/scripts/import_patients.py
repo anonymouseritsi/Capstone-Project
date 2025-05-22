@@ -20,4 +20,4 @@ def run():
                 street=row['street'],
                 email=row['email'],
                 slug=slug
-            )
+            ) 

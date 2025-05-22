@@ -21,8 +21,16 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 
 def home(request):
     patients = Patient.objects.all().order_by('-created_at')
+    
+    # Get province distribution data
+    province_data = Patient.objects.values('province').annotate(count=Count('id')).order_by('province')
+    labels = [item['province'] for item in province_data]
+    counts = [item['count'] for item in province_data]
+    
     context = {
-        'patients': patients
+        'patients': patients,
+        'labels': labels,
+        'counts': counts
     }
     return render(request,'home.html', context)
 

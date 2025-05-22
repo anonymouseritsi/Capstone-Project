@@ -7,6 +7,7 @@ Home
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
 <!-- dark overlay for the side panel -->
 <!-- <div class="dark-overlay" id='dark-overlay'></div> -->
 <!-- side panel -->
@@ -64,16 +65,24 @@ Home
                         Add Patient
                     </span>
                 </div>
-                <div class="view-analytics" onclick="location.href='/analytics'" style="cursor: pointer;">
-
+                <div class="view-analytics" onclick="location.href='/analytics-dashboard'" style="cursor: pointer;">
+                    <span class="analytics-icon">
+                        <img class="analytics-icon" src="{% static 'icons/analytics.png' %}" alt="">
+                    </span>
+                    <span class="analytics-text">
+                        View Analytics
+                    </span>
                 </div>
             </span>
             <span class="view-patient-container">
                 <div class="view-patients" onclick="location.href='/patients'" style="cursor: pointer;">
-
+                    <span class="view-text">
+                        View Patients
+                    </span>
                 </div>
             </span>
         </div>
+        <!-- recent patients -->
         <div class="recent-patients">
             <div class="recent-span-text">
                 <p id="recentText">Recent Patients</p>

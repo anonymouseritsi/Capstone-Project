@@ -25,7 +25,7 @@ class Patient(models.Model):
     street = models.CharField(max_length=50, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, blank=True)
-    email = models.EmailField(unique=True, blank=True)
+    email = models.EmailField( blank=True)
     procedure = models.CharField(max_length=50, blank=True)
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
